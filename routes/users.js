@@ -36,7 +36,7 @@ router.post('/', async function(req, res,next){
         companyId: req.body.companyId ? req.body.companyId : ''
       });
       let userSaved = await newUser.save();
-      res.json({result: true, user: { token: token, firstName: userSaved.firstName, avatar: userSaved.avatar }});
+      res.json({result: true, user: userSaved});
     } else {
       res.json({result: false, message:'email already exists'})
     }
@@ -44,14 +44,14 @@ router.post('/', async function(req, res,next){
 });
 
 // route connexion user
-router.get('/connect', async function(req, res,next){
+router.post('/connect', async function(req, res,next){
   let user = await UserModel.findOne({
     email: req.body.email.toLowerCase()
   });
 
   if(user) {
     if (bcrypt.compareSync(req.body.password, user.password)) {
-      res.json({result: true, user: { token: user.token, firstName: user.firstName, avatar: user.avatar }});
+      res.json({result: true, user});
     } else {
       res.json({result: false, message: 'password incorrect'});
     }
