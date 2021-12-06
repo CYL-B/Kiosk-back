@@ -85,6 +85,15 @@ router.post('/companies', function(req, res,next){
 router.put('/companies/:companyID', function(req, res,next){
   let token = req.body.token;
 
+var newDescCie = new userModel ({
+  descprition: req.body.descprition
+});
+var newUserSave = await newUser.save();
+var resultback = false;
+if (newUserSave) { // si la DB a bien créée un user selon les données envoyées alors resultback = true
+resultback = true
+};
+    
   if (!token) {
     res.json({ result: false });
   } else {
