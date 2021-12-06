@@ -6,33 +6,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-
-////// USER //////
-// route create user
-router.post('/users', function(req, res,next){
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Récupération du front des infos inscription utlisateur : 
-    // FROM FRONT : email / mdp / prenom / nom / tel / role / image profil
-    res.json({ result: true, user}); // user dans store 
-  }
-});
-
-// route connexion user
-router.get('/users/connexion', function(req, res,next){
-  let token = req.query.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Récupération des infos connexion
-    res.json({ result: true, user}); // user dans store 
-  }
-});
-
 ////// CHAT //////
 // route affichage conversations
 router.get('/conversations/:userID', function(req, res, next){
