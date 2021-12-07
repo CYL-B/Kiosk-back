@@ -18,7 +18,7 @@ var companySchema = mongoose.Schema({
     shortDescription: String,
     website: String,
     companyImage: String,
-    labels: String,
+    labels: [{type: mongoose.Schema.Types.ObjectId, ref: 'labels'}],
     offers: String,
     offices: [officeSchema]
 });
