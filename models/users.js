@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var favoritesSchema = mongoose.Schema({
-    companyId: String,
+    companyId: {type: mongoose.Schema.Types.ObjectId, ref: 'companies'},
     offerId: String
 });
 
@@ -15,7 +15,7 @@ var userSchema = mongoose.Schema({
     phone: String,
     role: String,
     avatar: String,
-    companyId: String,
+    companyId: {type: mongoose.Schema.Types.ObjectId, ref: 'companies'},
     favorites: [favoritesSchema]
 });
 var userModel = mongoose.model('users', userSchema);
