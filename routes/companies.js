@@ -2,16 +2,17 @@ var express = require('express');
 var router = express.Router();
 
 var CompanyModel = require('../models/companies');
+var labelModel = require('../models/labels');
 
 ////// PAGE ENTREPRISE //////
 // route affichage infos inscription entreprise
-router.get('/:companyId', function (req, res, next) { // /route/params?query
-    let token = req.query.token;
-
+router.get('/:companyId/:token', async function (req, res, next) { // /route/params?query
+    let token = req.params.token;
+// console.log("companyiD", req.params.token, req.params.companyId);
     if (!token) {
         res.json({ result: false });
     } else {
-        company = await CompanyModel.findById(req.params.companyId);
+        var company = await CompanyModel.findById(req.params.companyId);
         // Récupération dinfos inscription entreprise :
         // FROM FRONT : companyID
         // FROM DB TO FRONT dans {company} : ttes infos collection Companies (polulate offers + labels)
@@ -49,11 +50,16 @@ router.put('/:companyId', async function (req, res, next) {
     if (!token) {
         res.json({ result: false });
     } else {
-        await CompanyModel.updateOne(
-              { _id: req.params.companyId },
-              { description: req.body.description }
-        ); // update DB avec données du front/user
-
+        var dataCie = await CompanyModel.findOne({_id: req.params.companyId});
+// console.log("dataCie", dataCie);
+        const update = { description: req.body.description };
+// console.log("update", update);
+        await dataCie.updateOne(update);
+        // var newDescCie = await CompanyModel.updateOne(
+        //       { _id: req.params.companyId },
+        //       { description: req.body.description }
+        // ); // update DB avec données du front/user
+// console.log("update", req.params, req.body);
         // Modif des infos création page entreprise
         // infos modifiables depuis front :
         // FROM FRONT : companyID
@@ -61,5 +67,14 @@ router.put('/:companyId', async function (req, res, next) {
         res.json({ result: true });
     }
 });
+
+// route affichage labels
+router.get('/labels', async function (req, res, next) { // /route/params?query
+
+    var dataLabels = await labelModel.find();
+console.log("dataLabels", dataLabels);
+    res.json({ result: true, dataLabels });
+    }
+);
 
 module.exports = router;
