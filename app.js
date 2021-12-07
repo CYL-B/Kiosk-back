@@ -12,6 +12,13 @@ var conversationsRouter = require('./routes/conversations')
 
 var app = express();
 
+app.locals.dateFormat = function(date){
+    var newDate = new Date(date);
+    var format = newDate.getDate()+'/'+(newDate.getMonth()+1)+'/'+newDate.getFullYear();
+    return format;
+  }
+
+
 app.use(logger('dev'));
 app.use(express.json());   
 app.use(express.urlencoded({ extended: false }));
