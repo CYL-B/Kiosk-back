@@ -5,7 +5,7 @@ var CompanyModel = require('../models/companies');
 
 ////// PAGE ENTREPRISE //////
 // route affichage infos inscription entreprise
-router.get('/:companyId', function (req, res, next) { // /route/params?query
+router.get('/:companyId', async function (req, res, next) { // /route/params?query
     let token = req.query.token;
 
     if (!token) {
@@ -32,7 +32,8 @@ router.post('/', async function (req, res, next) {
             let newCompany = new CompanyModel({
                 companyName: req.body.companyName,
                 address: req.body.address ? req.body.address : '',
-                siret: req.body.siret ? req.body.siret : ''
+                siret: req.body.siret ? req.body.siret : '',
+                type: req.body.type ? req.body.type : ''
             });
             let companySaved = await newCompany.save();
             res.json({ result: true, company: companySaved });
