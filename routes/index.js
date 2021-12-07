@@ -157,7 +157,14 @@ router.get("/search", function (req, res, next) {
   }
 });
 
-//subcategorie 61af7536b46295d96d1e42e3
+router.get("/getcategories", async function (req, res, next) {
+  var categorieList = await CategoryModel.find();
+  if (categorieList) {
+    res.json({ result: true, categorieList });
+  } else {
+    res.json({ result: true });
+  }
+});
 
 router.post("/recherche", async function (req, res, next) {
   //Recherche en selection catégorie puis subcategorie
