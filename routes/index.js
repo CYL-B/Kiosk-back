@@ -9,59 +9,6 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
-////// CHAT //////
-// route affichage conversations
-router.get("/conversations/:userID", function (req, res, next) {
-  let token = req.query.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Récupération des conversations de la compagnie :
-    // récupérer companyID grâce au userID
-    // récupérer grace au companyID :
-    // FROM FRONT : userID
-    // FROM DB TO FRONT dans {conversations} : clientID / providerID (populate) / messages
-
-    res.json({ result: true, conversations });
-  }
-});
-
-// route affichage messages d'une conversation spécifique
-router.get(
-  "/conversations/messages/:conversationsID",
-  function (req, res, next) {
-    let token = req.query.token;
-
-    if (!token) {
-      res.json({ result: false });
-    } else {
-      // Récupération des messages de la conversation (grâce au conversationID)
-      // récupérer grace au conversationID :
-      // FROM FRONT : conversationID
-      // FROM DB TO FRONT dans {messages} : userID (populate) / messages / dateSent
-      res.json({ result: true, messages });
-    }
-  }
-);
-
-// route envoi message
-router.post(
-  "/conversations/messages/:conversationsID",
-  function (req, res, next) {
-    let token = req.body.token;
-
-    if (!token) {
-      res.json({ result: false });
-    } else {
-      // Envoi de messages dans la conversation
-      // récupérer infos :
-      // FROM FRONT : conversationID
-      // FROM FRONT : contenus message / userID (store) / dateMessage
-      res.json({ result: true });
-    }
-  }
-);
 
 ////// OFFERS //////
 // route affichage infos offres
