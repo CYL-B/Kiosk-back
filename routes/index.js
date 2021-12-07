@@ -6,33 +6,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-
-////// USER //////
-// route create user
-router.post('/users', function(req, res,next){
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Récupération du front des infos inscription utlisateur : 
-    // FROM FRONT : email / mdp / prenom / nom / tel / role / image profil
-    res.json({ result: true, user}); // user dans store 
-  }
-});
-
-// route connexion user
-router.get('/users/connexion', function(req, res,next){
-  let token = req.query.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Récupération des infos connexion
-    res.json({ result: true, user}); // user dans store 
-  }
-});
-
 ////// CHAT //////
 // route affichage conversations
 router.get('/conversations/:userID', function(req, res, next){
@@ -46,6 +19,7 @@ router.get('/conversations/:userID', function(req, res, next){
     // récupérer grace au companyID :
     // FROM FRONT : userID
     // FROM DB TO FRONT dans {conversations} : clientID / providerID (populate) / messages
+
     res.json({ result: true, conversations});
   }
 });
@@ -80,48 +54,7 @@ router.post('/conversations/messages/:conversationsID', function(req, res,next){
   }
 });
 
-////// PAGE ENTREPRISE //////
-// route affichage infos inscription entreprise
-router.get('/companies/:companyID', function(req, res, next){
-  let token = req.query.token;
 
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Récupération dinfos inscription entreprise :
-    // FROM FRONT : companyID
-    // FROM DB TO FRONT dans {company} : ttes infos collection Companies (polulate offers + labels)
-    res.json({ result: true, company}); 
-  }
-});
-
-// route envoi infos inscirption entreprise 
-router.post('/companies', function(req, res,next){
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Envoi du front des infos inscirption de la compagny : 
-    // FROM FRONT : nom entreprise / adresse / siret / userID
-    res.json({ result: true });
-  }
-});
-
-// route rajout infos page entreprise 
-router.put('/companies/:companyID', function(req, res,next){
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Modif des infos création page entreprise
-    // infos modifiables depuis front :
-    // FROM FRONT : companyID
-    // FROM FRONT : image / description (main avec affichage en mode short) / labelID / offerID
-    res.json({ result: true });
-  }
-});
 
 ////// OFFERS //////
 // route affichage infos offres
