@@ -51,7 +51,7 @@ router.get('/', async function (req, res, next) {
                 console.log("id", conversations[i].receiverID)
                 console.log("receiver", receiverCompany)
                 conversationsToDisplay.push(
-                    {
+                    {id : conversations[i].id,
                         logo: receiverCompany.logo ? receiverCompany.logo : '',
                         message: conversations[i].messages[conversations[i].messages.length - 1],
                         companyName: receiverCompany.companyName
