@@ -20,6 +20,6 @@ var offerSchema = mongoose.Schema({
   questions: [questionSchema],
 });
 
-var offerModel = mongoose.model("offers", offerSchema);
+var OfferModel = mongoose.model("offers", offerSchema);
 
-module.exports = offerModel;
+module.exports = OfferModel;

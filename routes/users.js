@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 
 var UserModel = require("../models/users");
-var categoryModel = require("../models/categories");
 
 var bcrypt = require("bcrypt");
 var uid2 = require("uid2");
@@ -60,19 +59,5 @@ router.post("/connect", async function (req, res, next) {
     res.json({ result: false, message: "user not found" });
   }
 });
-router.post('/recherche', async function(req, res, next){
-  var newUser = new UserModel({
-    categoryName = "Gerer vos bureaux",
-    categoryImage =     "https://images.unsplash.com/photo-1558959356-2f36c7322d3b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-    ,
-    subCategories = [{ subCategoryName: "Entretien", subCategoryImage: "https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" },
-    { subCategoryName: "Equipement IT", subCategoryImage: "https://images.unsplash.com/photo-1457305237443-44c3d5a30b89?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2074&q=80" },
-    { subCategoryName: "Snacks et boissons", subCategoryImage: "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" },
-    { subCategoryName: "Café", subCategoryImage: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1661&q=80" },
-    { subCategoryName: "Mobilier", subCategoryImage: "https://images.unsplash.com/photo-1542360915390-e1a7b3ce8865?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2069&q=80" },
-    { subCategoryName: "Recyclage", subCategoryImage: "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" },]
-   });
-   var userSaved = await newUser.save();
- })
- 
+
 module.exports = router;
