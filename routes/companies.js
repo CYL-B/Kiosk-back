@@ -5,12 +5,13 @@ var CompanyModel = require('../models/companies');
 
 ////// PAGE ENTREPRISE //////
 // route affichage infos inscription entreprise
-router.get('/:companyID', function (req, res, next) {
+router.get('/:companyId', function (req, res, next) { // /route/params?query
     let token = req.query.token;
 
     if (!token) {
         res.json({ result: false });
     } else {
+        company = await CompanyModel.findById(req.params.companyId);
         // Récupération dinfos inscription entreprise :
         // FROM FRONT : companyID
         // FROM DB TO FRONT dans {company} : ttes infos collection Companies (polulate offers + labels)
