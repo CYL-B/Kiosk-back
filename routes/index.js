@@ -1,67 +1,17 @@
 var express = require("express");
 var router = express.Router();
 
+var uniqid = require('uniqid');
+var fs = require('fs');
+
+var cloudinary = require('cloudinary').v2;
+
 var CategoryModel = require("../models/categories");
 var OfferModel = require("../models/offers");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
-});
-
-
-////// OFFERS //////
-// route affichage infos offres
-router.get("/offers/:companyID", function (req, res, next) {
-  let token = req.query.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Récupération dinfos offres entreprise :
-    // FROM FRONT : companyID
-    // FROM DB TO FRONT dans {offers} : toutes les offres grâce au companyID (populate)
-    res.json({ result: true, offers });
-  }
-});
-
-// route envoi infos création offres
-router.post("/offers/:companyID", function (req, res, next) {
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Envoi des infos création offre :
-    // FROM FRONT : companyID
-    // FROM FRONT : nom offre
-    res.json({ result: true });
-  }
-});
-
-// route modif infos offres
-router.put("/offers/:offerID", function (req, res, next) {
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Modif des infos création offre :
-
-    res.json({ result: true });
-  }
-});
-
-// route delete offres
-router.delete("/offers/:offerID", function (req, res, next) {
-  let token = req.query.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Suppression d'une offre
-    res.json({ result: true });
-  }
 });
 
 ////// SEARCH //////
@@ -126,5 +76,24 @@ router.post("/recherche", async function (req, res, next) {
     res.json({ result: false });
   }
 });
+
+// route connexion user
+router.post('/image', async function(req, res,next){
+  console.log(req.files);
+  var imagePath = './tmp/' + uniqid() + '.jpg';
+  var resultCopy = await req.files.image.mv(imagePath);
+
+  if (!resultCopy) {
+    var resultCloudinary = await cloudinary.uploader.upload(imagePath);
+    console.log(resultCloudinary);
+    if (resultCloudinary.url) {
+      fs.unlinkSync(imagePath);
+      res.json({ result: true, message: 'image uploaded', url: resultCloudinary.url });
+    }
+
+  } else {
+    res.json({ result: false, message: resultCopy });
+  }
+})
 
 module.exports = router;
