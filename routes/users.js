@@ -9,8 +9,6 @@ var uid2 = require("uid2");
 var uniqid = require('uniqid');
 var fs = require('fs');
 
-var request = require('sync-request');
-
 var cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
