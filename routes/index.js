@@ -1,11 +1,15 @@
 var express = require("express");
 var router = express.Router();
 
+<<<<<<< HEAD
 var uniqid = require('uniqid');
 var fs = require('fs');
 
 var cloudinary = require('cloudinary').v2;
 
+=======
+var companyModel = require("../models/companies");
+>>>>>>> recherche
 var CategoryModel = require("../models/categories");
 var OfferModel = require("../models/offers");
 
@@ -14,6 +18,63 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
+<<<<<<< HEAD
+=======
+////// OFFERS //////
+// route affichage infos offres
+router.get("/offers/:companyID", function (req, res, next) {
+  let token = req.query.token;
+
+  if (!token) {
+    res.json({ result: false });
+  } else {
+    // Récupération dinfos offres entreprise :
+    // FROM FRONT : companyID
+    // FROM DB TO FRONT dans {offers} : toutes les offres grâce au companyID (populate)
+    res.json({ result: true, offers });
+  }
+});
+
+// route envoi infos création offres
+router.post("/offers/:companyID", function (req, res, next) {
+  let token = req.body.token;
+
+  if (!token) {
+    res.json({ result: false });
+  } else {
+    // Envoi des infos création offre :
+    // FROM FRONT : companyID
+    // FROM FRONT : nom offre
+    res.json({ result: true });
+  }
+});
+
+// route modif infos offres
+router.put("/offers/:offerID", function (req, res, next) {
+  let token = req.body.token;
+
+  if (!token) {
+    res.json({ result: false });
+  } else {
+    // Modif des infos création offre :
+
+    res.json({ result: true });
+  }
+});
+
+// route delete offres
+router.delete("/offers/:offerID", function (req, res, next) {
+  let token = req.query.token;
+
+  if (!token) {
+    res.json({ result: false });
+  } else {
+    // Suppression d'une offre
+    res.json({ result: true });
+  }
+});
+
+>>>>>>> recherche
 ////// SEARCH //////
 // route affichage catégories
 router.get("/categories", function (req, res, next) {
@@ -64,12 +125,31 @@ router.get("/getcategories", async function (req, res, next) {
 });
 
 router.post("/recherche", async function (req, res, next) {
-  //Recherche en selection catégorie puis subcategorie
+  //Recherche en selectionant catégorie puis subcategorie
 
-  //var subcategorie = "61af7536b46295d96d1e42e3";
+  //var subcategorie = "61af73b7d3a79c53397e9741";
   var subcategorieId = req.body.subcategorieId;
-  let offerList = await OfferModel.find({ subCategoriyId: subcategorieId });
+  var categorieId = req.body.categorieId;
 
+  console.log(subcategorieId);
+  console.log(categorieId);
+
+  if (subcategorieId === categorieId) {
+    var offerList = await OfferModel.find({ categoriyId: categorieId });
+  } else {
+    var offerList = await OfferModel.find({ subCategoriyId: subcategorieId });
+  }
+
+  for (var i = 0; i < offerList.length; i++) {
+    var companyData = await companyModel.find({
+      offers: offerList[i]._id,
+    });
+    //console.log(companyData);
+    offerList[i] = { ...offerList[i].toJSON() };
+    offerList[i].companyData = companyData;
+  }
+
+  console.log(offerList);
   if (offerList) {
     res.json({ result: true, offerList });
   } else {
@@ -77,6 +157,7 @@ router.post("/recherche", async function (req, res, next) {
   }
 });
 
+<<<<<<< HEAD
 // route connexion user
 router.post('/image', async function(req, res,next){
   console.log(req.files);
@@ -95,5 +176,60 @@ router.post('/image', async function(req, res,next){
     res.json({ result: false, message: resultCopy });
   }
 })
+=======
+//route pour ajouter à la main une company
+router.get("/ajoutcompany", async function (req, res, next) {
+  var newCompagny = new companyModel({
+    siret: "9999999999",
+    companyName: "CompanyTest1",
+    logo: "https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1769&q=80",
+    type: "Prestataire",
+    description: "Description company 1",
+    shortDescription: "ShortDescription company 1",
+    website: "https://www.google.fr/",
+    companyImage:
+      "https://images.unsplash.com/photo-1495314736024-fa5e4b37b979?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1773&q=80",
+
+    offers: [
+      "61af78bc4292b4fe7bf8a1d9",
+      "61af79470346488ca041da0c",
+      "61af796c6f3e101baa8b7cd1",
+      "61af79a9c3c2ce891515a112",
+      "61af7a09cec6028d366c7cf5",
+    ],
+    offices: [
+      {
+        address: "56 Bv Pereire",
+        city: "Paris",
+        postalCode: "70017",
+        country: "France",
+        officeName: "Main Office",
+        phone: "0000000009",
+      },
+    ],
+  });
+
+  var saveCompany = await newCompagny.save();
+  var result = false;
+  if (saveCompany) {
+    result = true;
+  }
+
+  res.json({ result });
+});
+
+router.post("/rechercheparlabar", async function (req, res, next) {
+  var recherche = req.body.recherche;
+
+  var rechercheOffer = await OfferModel.find({
+    $or: [
+      { offerName: recherche },
+      { description: recherche },
+      { description: shortDescription },
+      { description: shortDescription },
+    ],
+  });
+});
+>>>>>>> recherche
 
 module.exports = router;

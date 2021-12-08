@@ -32,8 +32,8 @@ router.get("/", function (req, res, next) {
 // route create user
 <<<<<<< HEAD
 router.post("/", async function (req, res, next) {
-  console.log("req.body /users");
-  console.log(req.body);
+  //console.log("req.body /users");
+  //console.log(req.body);
   if (!req.body.email || !req.body.password) {
     res.json({ result: false, message: "info missing" });
 =======
@@ -48,7 +48,7 @@ router.post('/', async function(req, res,next){
       email: req.body.email,
     });
     if (!user) {
-      console.log(req.body);
+      // console.log(req.body);
       let token = uid2(32);
       let newUser = new UserModel({
         email: req.body.email.toLowerCase(),
@@ -99,13 +99,13 @@ router.post("/connect", async function (req, res, next) {
 
 // route connexion user
 router.post("/avatar", async function (req, res, next) {
-  console.log(req.files);
+  //.log(req.files);
   var imagePath = "./tmp/" + uniqid() + ".jpg";
   var resultCopy = await req.files.avatar.mv(imagePath);
 
   if (!resultCopy) {
     var resultCloudinary = await cloudinary.uploader.upload(imagePath);
-    console.log(resultCloudinary);
+    //console.log(resultCloudinary);
     if (resultCloudinary.url) {
       fs.unlinkSync(imagePath);
       res.json({

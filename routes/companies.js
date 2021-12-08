@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 
-<<<<<<< HEAD
 var CompanyModel = require("../models/companies");
 var labelModel = require("../models/labels");
 
@@ -20,6 +19,7 @@ router.get("/:companyId/:token", async function (req, res, next) {
     // FROM DB TO FRONT dans {company} : ttes infos collection Companies (polulate offers + labels)
     res.json({ result: true, company });
   }
+<<<<<<< HEAD
 =======
 var CompanyModel = require('../models/companies');
 var labelModel = require('../models/labels');
@@ -38,6 +38,8 @@ console.log("company", company);
         res.json({ result: true, company });
     }
 >>>>>>> 323c19e0a6d6e1d425f9f67aef3bf7c07350ae60
+=======
+>>>>>>> recherche
 });
 
 // route envoi infos inscirption entreprise
@@ -58,7 +60,6 @@ router.post("/", async function (req, res, next) {
       let companySaved = await newCompany.save();
       res.json({ result: true, company: companySaved });
     } else {
-<<<<<<< HEAD
       let company = await CompanyModel.findOne({
         companyName: req.body.companyName,
       });
@@ -75,29 +76,10 @@ router.post("/", async function (req, res, next) {
       } else {
         res.json({ result: false, message: "company already exists" });
       }
-=======
-        let company = await CompanyModel.findOne({
-            companyName: req.body.companyName
-        });
-        if (!company) {
-            console.log(req.body);
-            let newCompany = new CompanyModel({
-                companyName: req.body.companyName,
-                address: req.body.address ? req.body.address : '',
-                siret: req.body.siret ? req.body.siret : '',
-                type: req.body.type ? req.body.type : ''
-            });
-            let companySaved = await newCompany.save();
-            res.json({ result: true, company: companySaved });
-        } else {
-            res.json({ result: false, message: 'company already exists' })
-        }
->>>>>>> 323c19e0a6d6e1d425f9f67aef3bf7c07350ae60
     }
 }
 });
 
-<<<<<<< HEAD
 // route rajout infos page entreprise
 router.put("/:companyId", async function (req, res, next) {
   let token = req.body.token;
@@ -131,6 +113,7 @@ router.get("/labels", async function (req, res, next) {
   console.log("dataLabels", dataLabels);
   res.json({ result: true, dataLabels });
 });
+<<<<<<< HEAD
 =======
 // route rajout infos page entreprise 
 router.put('/:companyId', async function (req, res, next) {
@@ -178,6 +161,8 @@ console.log("dataLabels", dataLabels);
     }
 );
 >>>>>>> 323c19e0a6d6e1d425f9f67aef3bf7c07350ae60
+=======
+>>>>>>> recherche
 
 
 module.exports = router;
