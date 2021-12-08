@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
+var companyModel = require("../models/companies");
 var CategoryModel = require("../models/categories");
 var OfferModel = require("../models/offers");
 
@@ -8,7 +9,6 @@ var OfferModel = require("../models/offers");
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
-
 
 ////// OFFERS //////
 // route affichage infos offres
@@ -114,14 +114,95 @@ router.get("/getcategories", async function (req, res, next) {
 });
 
 router.post("/recherche", async function (req, res, next) {
-  //Recherche en selection catégorie puis subcategorie
+  //Recherche en selectionant catégorie puis subcategorie
 
-  //var subcategorie = "61af7536b46295d96d1e42e3";
+  //var subcategorie = "61af73b7d3a79c53397e9741";
   var subcategorieId = req.body.subcategorieId;
+
+  //console.log(subcategorieId);
+
   let offerList = await OfferModel.find({ subCategoriyId: subcategorieId });
+
+  for (var i = 0; i < offerList.length; i++) {
+    var companyData = await companyModel.find({
+      offers: offerList[i]._id,
+    });
+    //console.log(companyData);
+    offerList[i] = { ...offerList[i].toJSON() };
+    offerList[i].companyData = companyData;
+  }
+  console.log(companyData);
+  console.log(offerList);
+
+  // var newofferList = async () => {
+  //   return offerList.map(async (e, i) => {
+  //     let companyData = await companyModel.find({
+  //       offers: e._id,
+  //     });
+
+  //     return { ...e, ccompanyData: companyData };
+  //   });
+  // };
+  // await newofferList();
+  // console.log(newofferList);
+
+  //console.log(newofferList);
 
   if (offerList) {
     res.json({ result: true, offerList });
+  } else {
+    res.json({ result: false });
+  }
+});
+
+//route pour ajouter à la main une company
+router.get("/ajoutcompany", async function (req, res, next) {
+  var newCompagny = new companyModel({
+    siret: "9999999999",
+    companyName: "CompanyTest1",
+    logo: "https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1769&q=80",
+    type: "Prestataire",
+    description: "Description company 1",
+    shortDescription: "ShortDescription company 1",
+    website: "https://www.google.fr/",
+    companyImage:
+      "https://images.unsplash.com/photo-1495314736024-fa5e4b37b979?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1773&q=80",
+
+    offers: [
+      "61af78bc4292b4fe7bf8a1d9",
+      "61af79470346488ca041da0c",
+      "61af796c6f3e101baa8b7cd1",
+      "61af79a9c3c2ce891515a112",
+      "61af7a09cec6028d366c7cf5",
+    ],
+    offices: [
+      {
+        address: "56 Bv Pereire",
+        city: "Paris",
+        postalCode: "70017",
+        country: "France",
+        officeName: "Main Office",
+        phone: "0000000009",
+      },
+    ],
+  });
+
+  var saveCompany = await newCompagny.save();
+  var result = false;
+  if (saveCompany) {
+    result = true;
+  }
+
+  res.json({ result });
+});
+
+router.get("/getcompanydata", async function (req, res, next) {
+  let companyDat = await companyModel.find({
+    offers: "61af78bc4292b4fe7bf8a1d9",
+  });
+
+  if (companyDat) {
+    res.json({ result: true, companyDat });
   } else {
     res.json({ result: false });
   }
