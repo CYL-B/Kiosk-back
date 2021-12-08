@@ -118,10 +118,16 @@ router.post("/recherche", async function (req, res, next) {
 
   //var subcategorie = "61af73b7d3a79c53397e9741";
   var subcategorieId = req.body.subcategorieId;
+  var categorieId = req.body.categorieId;
 
-  //console.log(subcategorieId);
+  console.log(subcategorieId);
+  console.log(categorieId);
 
-  let offerList = await OfferModel.find({ subCategoriyId: subcategorieId });
+  if (subcategorieId === categorieId) {
+    var offerList = await OfferModel.find({ categoriyId: categorieId });
+  } else {
+    var offerList = await OfferModel.find({ subCategoriyId: subcategorieId });
+  }
 
   for (var i = 0; i < offerList.length; i++) {
     var companyData = await companyModel.find({
@@ -131,23 +137,8 @@ router.post("/recherche", async function (req, res, next) {
     offerList[i] = { ...offerList[i].toJSON() };
     offerList[i].companyData = companyData;
   }
-  console.log(companyData);
+
   console.log(offerList);
-
-  // var newofferList = async () => {
-  //   return offerList.map(async (e, i) => {
-  //     let companyData = await companyModel.find({
-  //       offers: e._id,
-  //     });
-
-  //     return { ...e, ccompanyData: companyData };
-  //   });
-  // };
-  // await newofferList();
-  // console.log(newofferList);
-
-  //console.log(newofferList);
-
   if (offerList) {
     res.json({ result: true, offerList });
   } else {
