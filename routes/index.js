@@ -187,16 +187,17 @@ router.get("/ajoutcompany", async function (req, res, next) {
   res.json({ result });
 });
 
-router.get("/getcompanydata", async function (req, res, next) {
-  let companyDat = await companyModel.find({
-    offers: "61af78bc4292b4fe7bf8a1d9",
-  });
+router.post("/rechercheparlabar", async function (req, res, next) {
+  var recherche = req.body.recherche;
 
-  if (companyDat) {
-    res.json({ result: true, companyDat });
-  } else {
-    res.json({ result: false });
-  }
+  var rechercheOffer = await OfferModel.find({
+    $or: [
+      { offerName: recherche },
+      { description: recherche },
+      { description: shortDescription },
+      { description: shortDescription },
+    ],
+  });
 });
 
 module.exports = router;
