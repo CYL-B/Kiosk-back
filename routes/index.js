@@ -1,20 +1,11 @@
 var express = require("express");
 var router = express.Router();
 
-<<<<<<< HEAD
-var uniqid = require("uniqid");
-var fs = require("fs");
-
-var cloudinary = require("cloudinary").v2;
-
-var companyModel = require("../models/companies");
-=======
 var uniqid = require('uniqid');
 var fs = require('fs');
 var cloudinary = require('cloudinary').v2;
 
 var CompanyModel = require("../models/companies");
->>>>>>> 107affa15bb4bbe6ff3390e7bebf4ce50bee7fdf
 var CategoryModel = require("../models/categories");
 var OfferModel = require("../models/offers");
 
@@ -63,8 +54,6 @@ router.get("/search", function (req, res, next) {
   }
 });
 
-<<<<<<< HEAD
-=======
 router.get("/getcategories", async function (req, res, next) {
   var categorieList = await CategoryModel.find();
   if (categorieList) {
@@ -107,7 +96,6 @@ router.post("/recherche", async function (req, res, next) {
   }
 });
 
->>>>>>> 107affa15bb4bbe6ff3390e7bebf4ce50bee7fdf
 // route connexion user
 router.post("/image", async function (req, res, next) {
   console.log(req.files);
@@ -115,7 +103,7 @@ router.post("/image", async function (req, res, next) {
   var resultCopy = await req.files.image.mv(imagePath);
 
   if (!resultCopy) {
-    var resultCloudinary = await cloudinary.uploader.upload(imagePath);
+    var resultCloudinary = await cloudinary.uploader.upload(imagePath); // upload + renvoie url cloudinary
     console.log(resultCloudinary);
     if (resultCloudinary.url) {
       fs.unlinkSync(imagePath);
@@ -128,8 +116,6 @@ router.post("/image", async function (req, res, next) {
   } else {
     res.json({ result: false, message: resultCopy });
   }
-<<<<<<< HEAD
-=======
 })
 //route pour ajouter à la main une company
 router.get("/ajoutcompany", async function (req, res, next) {
@@ -183,7 +169,6 @@ router.post("/rechercheparlabar", async function (req, res, next) {
       { description: shortDescription },
     ],
   });
->>>>>>> 107affa15bb4bbe6ff3390e7bebf4ce50bee7fdf
 });
 
 module.exports = router;
