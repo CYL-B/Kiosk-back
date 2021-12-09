@@ -1,15 +1,12 @@
 var express = require("express");
 var router = express.Router();
 
-<<<<<<< HEAD
 var uniqid = require('uniqid');
 var fs = require('fs');
 
 var cloudinary = require('cloudinary').v2;
 
-=======
 var companyModel = require("../models/companies");
->>>>>>> recherche
 var CategoryModel = require("../models/categories");
 var OfferModel = require("../models/offers");
 
@@ -18,63 +15,6 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
-<<<<<<< HEAD
-=======
-////// OFFERS //////
-// route affichage infos offres
-router.get("/offers/:companyID", function (req, res, next) {
-  let token = req.query.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Récupération dinfos offres entreprise :
-    // FROM FRONT : companyID
-    // FROM DB TO FRONT dans {offers} : toutes les offres grâce au companyID (populate)
-    res.json({ result: true, offers });
-  }
-});
-
-// route envoi infos création offres
-router.post("/offers/:companyID", function (req, res, next) {
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Envoi des infos création offre :
-    // FROM FRONT : companyID
-    // FROM FRONT : nom offre
-    res.json({ result: true });
-  }
-});
-
-// route modif infos offres
-router.put("/offers/:offerID", function (req, res, next) {
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Modif des infos création offre :
-
-    res.json({ result: true });
-  }
-});
-
-// route delete offres
-router.delete("/offers/:offerID", function (req, res, next) {
-  let token = req.query.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Suppression d'une offre
-    res.json({ result: true });
-  }
-});
-
->>>>>>> recherche
 ////// SEARCH //////
 // route affichage catégories
 router.get("/categories", function (req, res, next) {
@@ -157,7 +97,6 @@ router.post("/recherche", async function (req, res, next) {
   }
 });
 
-<<<<<<< HEAD
 // route connexion user
 router.post('/image', async function(req, res,next){
   console.log(req.files);
@@ -176,7 +115,6 @@ router.post('/image', async function(req, res,next){
     res.json({ result: false, message: resultCopy });
   }
 })
-=======
 //route pour ajouter à la main une company
 router.get("/ajoutcompany", async function (req, res, next) {
   var newCompagny = new companyModel({
@@ -230,6 +168,5 @@ router.post("/rechercheparlabar", async function (req, res, next) {
     ],
   });
 });
->>>>>>> recherche
 
 module.exports = router;
