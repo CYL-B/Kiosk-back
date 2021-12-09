@@ -3,69 +3,15 @@ var router = express.Router();
 
 var uniqid = require('uniqid');
 var fs = require('fs');
-
 var cloudinary = require('cloudinary').v2;
 
+var CompanyModel = require("../models/companies");
 var CategoryModel = require("../models/categories");
 var OfferModel = require("../models/offers");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
-});
-
-////// OFFERS //////
-// route affichage infos offres
-router.get("/offers/:companyID", function (req, res, next) {
-  let token = req.query.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Récupération dinfos offres entreprise :
-    // FROM FRONT : companyID
-    // FROM DB TO FRONT dans {offers} : toutes les offres grâce au companyID (populate)
-    res.json({ result: true, offers });
-  }
-});
-
-// route envoi infos création offres
-router.post("/offers/:companyID", function (req, res, next) {
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Envoi des infos création offre :
-    // FROM FRONT : companyID
-    // FROM FRONT : nom offre
-    res.json({ result: true });
-  }
-});
-
-// route modif infos offres
-router.put("/offers/:offerID", function (req, res, next) {
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Modif des infos création offre :
-
-    res.json({ result: true });
-  }
-});
-
-// route delete offres
-router.delete("/offers/:offerID", function (req, res, next) {
-  let token = req.query.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    // Suppression d'une offre
-    res.json({ result: true });
-  }
 });
 
 ////// SEARCH //////
@@ -134,7 +80,7 @@ router.post("/recherche", async function (req, res, next) {
   }
 
   for (var i = 0; i < offerList.length; i++) {
-    var companyData = await companyModel.find({
+    var companyData = await CompanyModel.find({
       offers: offerList[i]._id,
     });
     //console.log(companyData);

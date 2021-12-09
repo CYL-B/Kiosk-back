@@ -9,9 +9,7 @@ var uid2 = require("uid2");
 var uniqid = require("uniqid");
 var fs = require("fs");
 
-var request = require("sync-request");
-
-var cloudinary = require("cloudinary").v2;
+var cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
   cloud_name: "djlnzwuj2",
@@ -26,11 +24,11 @@ router.get("/", function (req, res, next) {
 
 ////// USER //////
 // route create user
-router.post('/', async function(req, res,next){
-  console.log('req.body /users');
-  console.log(req.body);
-  if(!req.body.email || !req.body.password) {
-    res.json({result: false, message: 'info missing'});
+router.post("/", async function (req, res, next) {
+  //console.log("req.body /users");
+  //console.log(req.body);
+  if (!req.body.email || !req.body.password) {
+    res.json({ result: false, message: "info missing" });
   } else {
     let user = await UserModel.findOne({
       email: req.body.email,
@@ -42,13 +40,13 @@ router.post('/', async function(req, res,next){
         email: req.body.email.toLowerCase(),
         password: bcrypt.hashSync(req.body.password, 10),
         token: token,
-        type: req.body.type ? req.body.type : '',
-        firstName: req.body.firstName ? req.body.firstName : '',
-        lastName: req.body.lastName ? req.body.lastName : '',
-        role: req.body.role ? req.body.role : '',
-        phone: req.body.phone ? req.body.phone : '',
-        avatar: req.body.avatar ? req.body.avatar : '',
-        companyId: req.body.companyId ? req.body.companyId : ''
+        type: req.body.type ? req.body.type : "",
+        firstName: req.body.firstName ? req.body.firstName : "",
+        lastName: req.body.lastName ? req.body.lastName : "",
+        role: req.body.role ? req.body.role : "",
+        phone: req.body.phone ? req.body.phone : "",
+        avatar: req.body.avatar ? req.body.avatar : "",
+        companyId: req.body.companyId ? req.body.companyId : "",
       });
       let userSaved = await newUser.save();
       res.json({ result: true, user: userSaved });

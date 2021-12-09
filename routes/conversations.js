@@ -5,63 +5,84 @@ var CompanyModel = require("../models/companies");
 var UserModel = require("../models/users");
 
 ////// CHAT //////
-// route affichage conversations
-router.post("/new-conversation", async function (req, res, next) {
-  //var conversation = await conversationModel.find({senderId : senderId, receiverId : receiverId})
-  //if (conversation){res.redirect({})}
-  //else{var newConversation...}
-  var newConversation = new conversationModel({
-    senderID: "61ae3cbd7f3164baaccf2c6a",
-    receiverID: req.body.receiverID,
-    messages: [{ message: "glouglou" }],
-  });
 
-  var conversationSaved = await newConversation.save();
+//route test modif conversations
 
-  res.json({ result: true, conversationSaved });
-});
-///conversations/:userID
-router.get("/", async function (req, res, next) {
-  // let token = req.query.token;
+// route test création conversations
+router.post('/new-conversation', async function (req, res, next) {
+    //avant de créer une nouvelle conversation, il faut vérifier au préalable qu'il en existe pas déjà une entre les deux interlocuteurs : 
+    //var conversation = await conversationModel.find({senderId : senderId: user.companyId, receiverId : id reçu depuis la page company-prestataire})
 
-  // if (!token) {
-  //     res.json({ result: false });
-  // } else {
+    //si une conversation existe, il faut rediriger vers la page correspondante grâce à l'id de la conversation récupéré dans le back et à renvoyer au front if (conversation){res.redirect({})}
+    //sinon, on créé une nouvelle conv : else{var newConversation...}
+    var newConversation = new conversationModel({
+        senderID: "61ae3cbd7f3164baaccf2c6a",
+        receiverID: "61ae3d26c4c0d34ec5313d34",
+        messages: [{
+            message: "hey I'm trying",
+            userId: "61af372581dee32b2aedcb55",
+            dateMessageSent: new Date()
+        }]
+    })
 
-  //récupérer le user
-  var user = await UserModel.findById("61af372581dee32b2aedcb55");
-  // console.log("user", user)
-  //récupérer l'id de l'entreprise à laquelle le user appartient
-  var companyId = user.companyId;
-  // console.log(companyId)
-  //récupérer l'entreprise à laquelle le user appartient
-  var senderCompany = await CompanyModel.findById(companyId);
-  // console.log(senderCompany)
-  //récupérer les conversations de l'entreprise (elle correspond au sender dans la collection "conversations")
-  var conversations = await conversationModel.find({ senderId: companyId });
-  // console.log(conversations)
+    var conversationSaved = await newConversation.save()
 
-  let conversationsToDisplay = [];
+    res.json({ result: true, conversationSaved });
+}
+);
+///conversations/:userID = ne pas oublier de renvoyer le userID
+//route qui affiche les conversations
+router.get('/', async function (req, res, next) {
+    //récupérer le token depuis le front grâce au user renvoyé par le front(props.user)
+    // let token = req.query.token;
 
-  for (var i = 0; i < conversations.length; i++) {
-    var receiverCompany = await CompanyModel.findById(
-      conversations[i].receiverID
-    );
-    // console.log("id", conversations[i].receiverID)
-    // console.log("receiver", receiverCompany)
-    conversationsToDisplay.push({
-      id: conversations[i].id,
-      logo: receiverCompany.logo ? receiverCompany.logo : "",
-      message: conversations[i].messages[conversations[i].messages.length - 1],
-      companyName: receiverCompany.companyName,
-    });
-  }
+    // if (!token) {
+    //     res.json({ result: false });
+    // } else {
 
-  // console.log("conversations", conversationsToDisplay)
-  //récupére les informations des conversations
 
-  res.json({ conversationsToDisplay });
-});
+    //récupérer le user grâce au user id renvoyé du front (props.user)
+    var user = await UserModel.findById("61af372581dee32b2aedcb55")
+    console.log("user", user)
+    //récupérer l'id de l'entreprise à laquelle le user appartient
+    var companyId = user.companyId
+    console.log(companyId)
+    //récupérer l'entreprise à laquelle le user appartient
+    var senderCompany = await CompanyModel.findById(companyId)
+    console.log(senderCompany)
+    //récupérer les conversations de l'entreprise (elle correspond au sender dans la collection "conversations")
+    var conversations = await conversationModel.find({ senderId: companyId })
+    console.log(conversations)
+
+    //s'il existe des conversations : if (conversations), le code suivant s'exécute
+
+    let conversationsToDisplay = [];
+
+    for (var i = 0; i < conversations.length; i++) {
+        var receiverCompany = await CompanyModel.findById(conversations[i].receiverID);
+        console.log("id", conversations[i].receiverID)
+        console.log("receiver", receiverCompany)
+        console.log("message", conversations[i].messages[conversations[i].messages.length - 1].message)
+        conversationsToDisplay.push(
+            {
+                id: conversations[i].id,
+                logo: receiverCompany.logo ? receiverCompany.logo : '',
+                message: conversations[i].messages[conversations[i].messages.length - 1].message,
+                date: conversations[i].messages[conversations[i].messages.length - 1].dateMessageSent ? conversations[i].messages[conversations[i].messages.length - 1].dateMessageSent : "",
+                companyName: receiverCompany.companyName
+            })
+    }
+    //ajout d'objets correspondant aux conversations avec toutes les informations qu'on veut afficher dans le front dans un tableau "conversations to display"
+
+    console.log("conversations", conversationsToDisplay)
+
+
+
+    res.json({ conversationsToDisplay })
+        ;
+})
+// FROM DB TO FRONT dans {conversationsToDisplay} : informations à afficher dans le front 
+
 
 // Récupération des conversations de la compagnie :
 // récupérer companyID grâce au userID
@@ -72,90 +93,105 @@ router.get("/", async function (req, res, next) {
 // }
 
 // route test affichage messages d'une conversation spécifique
-router.get("/messages", async function (req, res, next) {
-  // :conversationsID
-  var conversation = await conversationModel.findById(
-    "61af3a628dee7b62da8c0782"
-  );
-  // console.log("conversation", conversation)
-  var messagesToShow = conversation.messages;
-  // console.log("messagestoshow", messagesToShow)
+router.get('/messages/:convId', async function (req, res, next) {
 
-  // var date = messagesToShow.dateMessageSent;
-  // console.log("date", date)
+    // FROM FRONT : conversationID + token +user
 
-  var messages = [];
-  for (var i = 0; i < messagesToShow.length; i++) {
-    var user = await UserModel.findById(messagesToShow[i].userId);
-    //.log("vérif", messagesToShow)
-    let userInfo = {
-      _id: user.id === req.query.user.id ? 1 : 2,
-      name: user.firstName,
-      avatar: user.avatar,
-    };
-    messages.push({
-      text: messagesToShow[i].message,
-      id: messagesToShow[i].id,
-      createdAt: messagesToShow[i].dateMessageSent,
-      user: userInfo,
-    });
-  }
-  //console.log("messages", messages)
+    //     let token = req.query.token;
 
-  // message
-  // _id: 1,
-  // text: 'Hello developer',
-  // createdAt: new Date(),
-  // user: {
-  //   _id: 2,
-  //   name: 'React Native',
-  //   avatar: 'https://placeimg.com/140/140/any',
-  // },
+    //     if (!token) {
+    //       res.json({ result: false });
+    //     } else {
 
-  //console.log("messages", messages)
-  //console.log("id", userId)
+    // on récupère la conversation concernée grâce à son Id : ne pas oublier de renvoyer le :conversationsID depuis le front
+    var conversation = await conversationModel.findById(req.params.convId)
+    console.log("conversation", conversation)
+    //on cherche les messages à afficher
+    var messagesToShow = conversation.messages;
 
-  // var user = await UserModel.findById(userId.id)
-  // var avatar = user.avatar
 
-  // var userID = messagesToShow.userId
-  // var user = await UserModel.findById(userID)
-  // var avatar = user.avatar
+    //on va chercher les informations des messages à afficher dans le front
+    //il faut remplacer le 2e messagesToShow.userId par req.params.user.id quand il y aura un user logged
+    var messages = []
+    for (var i = 0; i < messagesToShow.length; i++) {
+        var user = await UserModel.findById(messagesToShow[i].userId);
 
-  //     let token = req.query.token;
+        let userInfo = {
+            _id: messagesToShow.userId === messagesToShow.userId ? 1 : 2,
+            name: user.firstName,
+            avatar: user.avatar
+        }
+        messages.push(
+            {
+                text: messagesToShow[i].message,
+                _id: messagesToShow[i].id,
+                createdAt: messagesToShow[i].dateMessageSent,
+                user: userInfo
+            }
+        )
+    }
+    console.log("messages", messages)
 
-  //     if (!token) {
-  //       res.json({ result: false });
-  //     } else {
+//sort par date
 
-  // Récupération des messages de la conversation (grâce au conversationID)
-  // récupérer grace au conversationID :
-  // FROM FRONT : conversationID
-  // FROM DB TO FRONT dans {messages} : userID (populate) / messages / dateSent
-  res.json({ result: true, messages });
-  // }
+var sortedMessages = messages.slice().sort((a, b)=> b.createdAt -a.createdAt)
+
+    // FROM DB TO FRONT dans {messages} : userID / messages / dateSent
+    res.json({ result: true,sortedMessages });
+    // }
 });
 
-// route envoi message
-router.post("/messages/:conversationsID", async function (req, res, next) {
-  let token = req.body.token;
+// route envoi message dans la conversation + convId + userId
+router.post('/messages', async function (req, res, next) {
 
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    var conversation = conversationModel.findById(req.body.conversationsID);
-    var messages = conversation.messages.push({
-      userId: "61ae3cbd7f3164baaccf2c6a",
-      message: req.body.message,
-      date: req.body.date,
-    });
+    //récupérer infos from FRONT : conversationID, contenus message / user (store) / dateMessage
+    // let token = req.body.token;
 
-    // Envoi de messages dans la conversation
-    // récupérer infos :
-    // FROM FRONT : conversationID
-    // FROM FRONT : contenus message / userID (store) / dateMessage
-    res.json({ result: true, messages });
-  }
+    // if (!token) {
+    //     res.json({ result: false });
+    // } else {
+console.log("fromfront", req.body)
+
+    var conversation = await conversationModel.findOneAndUpdate({ _id: "61b07b73aeda7e3faed5a42a" },
+        {
+            $push: {
+                messages: 
+                    {message: req.body.message,
+                    dateMessageSent: req.body.date,
+                    userId: "61af372581dee32b2aedcb55"}
+                
+            }
+        }, { new: true })
+
+    //     date: req.body.date
+    //userID : req.body.user.userID
+
+    //comment retrouver le message créé et lui assigner la structure exacte qu'on a dans le front
+    var conversationToFind = await conversationModel.findById("61b07b73aeda7e3faed5a42a")
+    var messageToFind = conversationToFind.messages[conversationToFind.messages.length - 1]
+
+    var user = await UserModel.findById("61af372581dee32b2aedcb55")
+    //pour tester message sendToFront
+
+    //il faut remplacer le 2e messageToSendToFront.userId par req.body.user.id quand il y aura un user logged
+    //req.body.user.firstName
+    //req.body.user.avatar
+    let userInfo = {
+        _id: messageToFind.userId === messageToFind.userId ? 1 : 2,
+        name: user.firstName,
+        avatar: user.avatar
+    }
+    var messageToSendToFront = {
+        _id: messageToFind.id,
+        text: messageToFind.message,
+        createdAt: messageToFind.dateMessageSent,
+        user: userInfo
+    }
+
+//messageToSendToFront permet de reconstituer le message enregistré dans la database pour que la structure corresponde à ce qui existe dans le front
+
+    res.json({ result: true, messageToSendToFront });
+
 });
 
 module.exports = router;
