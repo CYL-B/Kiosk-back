@@ -3,10 +3,9 @@ var router = express.Router();
 
 var uniqid = require('uniqid');
 var fs = require('fs');
-
 var cloudinary = require('cloudinary').v2;
 
-var companyModel = require("../models/companies");
+var CompanyModel = require("../models/companies");
 var CategoryModel = require("../models/categories");
 var OfferModel = require("../models/offers");
 
@@ -81,7 +80,7 @@ router.post("/recherche", async function (req, res, next) {
   }
 
   for (var i = 0; i < offerList.length; i++) {
-    var companyData = await companyModel.find({
+    var companyData = await CompanyModel.find({
       offers: offerList[i]._id,
     });
     //console.log(companyData);
