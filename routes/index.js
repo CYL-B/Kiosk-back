@@ -103,7 +103,7 @@ router.post('/image', async function(req, res,next){
   var resultCopy = await req.files.image.mv(imagePath);
 
   if (!resultCopy) {
-    var resultCloudinary = await cloudinary.uploader.upload(imagePath);
+    var resultCloudinary = await cloudinary.uploader.upload(imagePath); // upload + renvoie url cloudinary
     console.log(resultCloudinary);
     if (resultCloudinary.url) {
       fs.unlinkSync(imagePath);

@@ -5,6 +5,7 @@ var CompanyModel = require('../models/companies');
 var labelModel = require('../models/labels');
 var OfferModel = require('../models/offers');
 
+
 ////// PAGE ENTREPRISE //////
 // route affichage infos inscription entreprise
 router.get('/:companyId/:token', async function (req, res, next) { // /route/params?query
@@ -14,8 +15,8 @@ router.get('/:companyId/:token', async function (req, res, next) { // /route/par
         res.json({ result: false });
     } else {
         var company = await CompanyModel.findById(req.params.companyId).populate("labels").populate("offers").exec();
-console.log("company", company.labels);
-console.log("company", company);
+// console.log("company", company.labels);
+// console.log("company", company);
         res.json({ result: true, company });
     }
 });
@@ -67,7 +68,7 @@ router.put('/:companyId', async function (req, res, next) {
     } else {
         var dataCie = await CompanyModel.findOne({_id: req.params.companyId}); // recupération data company de DB par ID
 // console.log("dataCie", dataCie)
-        if (req.body.labelId) {
+        if (req.body.labelId) { //////////////
             dataCie.labels.push(req.body.labelId)
         }
 
@@ -81,25 +82,18 @@ router.put('/:companyId', async function (req, res, next) {
         });
         let offerSaved = await newOffer.save();
           dataCie.offers.push(offerSaved._id) // on push la nouvelle offre via son id dans la cie
-      }
+        }
+
+        if (req.body.image) {
+          console.log("req.body.image", req.body.image);
+          dataCie.companyImage = req.body.image
+        }
 // console.log("dataCie", dataCie)
         await dataCie.save();
         var dataCieFull = await CompanyModel.findOne({_id: req.params.companyId}).populate("labels").populate("offers").exec();
-console.log("dataCieFull", dataCieFull)
+// console.log("dataCieFull", dataCieFull)
 // console.log("dataCie", dataCie);
 
-        // const update = { description: req.body.description };
-// console.log("update", update);
-        // await dataCie.updateOne(update); // update propriété description dans DB
-        // var newDescCie = await CompanyModel.updateOne(
-        //       { _id: req.params.companyId },
-        //       { description: req.body.description }
-        // ); // update DB avec données du front/user
-// console.log("update", req.params, req.body);
-        // Modif des infos création page entreprise
-        // infos modifiables depuis front :
-        // FROM FRONT : companyID
-        // FROM FRONT : image / description (main avec affichage en mode short) / labelID / offerID
         res.json({ result: true, dataCieFull });
     }
 });
@@ -107,11 +101,17 @@ console.log("dataCieFull", dataCieFull)
 // route affichage labels sur page company blank
 router.get('/labels', async function (req, res, next) { // /route/params?query
     var dataLabels = await labelModel.find();
-console.log("dataLabels", dataLabels);
+// console.log("dataLabels", dataLabels);
     res.json({ result: true, dataLabels });
     }
 );
 
-
+// route suppression labels sur page company filled
+router.put('/labels/:companyId/:labelId', async function (req, res, next) { // /route/params?query
+    await CompanyModel.updateOne( { _id: req.params.companyId }, { $pull: { labels: req.params.labelId } } )
+    var dataLabelsCieUpdated = await CompanyModel.findOne({_id: req.params.companyId}).populate("labels").populate("offers").exec();
+    res.json({ result: true, dataLabelsCieUpdated });
+    }
+);
 
 module.exports = router;
