@@ -1,15 +1,11 @@
 var express = require("express");
 var router = express.Router();
 
-<<<<<<< HEAD
 var uniqid = require('uniqid');
 var fs = require('fs');
 
 var cloudinary = require('cloudinary').v2;
 
-=======
-var companyModel = require("../models/companies");
->>>>>>> recherche
 var CategoryModel = require("../models/categories");
 var OfferModel = require("../models/offers");
 
@@ -18,8 +14,6 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
-<<<<<<< HEAD
-=======
 ////// OFFERS //////
 // route affichage infos offres
 router.get("/offers/:companyID", function (req, res, next) {
@@ -74,7 +68,6 @@ router.delete("/offers/:offerID", function (req, res, next) {
   }
 });
 
->>>>>>> recherche
 ////// SEARCH //////
 // route affichage catégories
 router.get("/categories", function (req, res, next) {
@@ -157,7 +150,6 @@ router.post("/recherche", async function (req, res, next) {
   }
 });
 
-<<<<<<< HEAD
 // route connexion user
 router.post('/image', async function(req, res,next){
   console.log(req.files);
@@ -176,7 +168,6 @@ router.post('/image', async function(req, res,next){
     res.json({ result: false, message: resultCopy });
   }
 })
-=======
 //route pour ajouter à la main une company
 router.get("/ajoutcompany", async function (req, res, next) {
   var newCompagny = new companyModel({
@@ -230,6 +221,5 @@ router.post("/rechercheparlabar", async function (req, res, next) {
     ],
   });
 });
->>>>>>> recherche
 
 module.exports = router;

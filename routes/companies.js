@@ -19,27 +19,7 @@ router.get("/:companyId/:token", async function (req, res, next) {
     // FROM DB TO FRONT dans {company} : ttes infos collection Companies (polulate offers + labels)
     res.json({ result: true, company });
   }
-<<<<<<< HEAD
-=======
-var CompanyModel = require('../models/companies');
-var labelModel = require('../models/labels');
 
-////// PAGE ENTREPRISE //////
-// route affichage infos inscription entreprise
-router.get('/:companyId/:token', async function (req, res, next) { // /route/params?query
-    let token = req.params.token;
-// console.log("companyiD", req.params.token, req.params.companyId);
-    if (!token) {
-        res.json({ result: false });
-    } else {
-        var company = await CompanyModel.findById(req.params.companyId).populate("labels");
-console.log("company", company.labels);
-console.log("company", company);
-        res.json({ result: true, company });
-    }
->>>>>>> 323c19e0a6d6e1d425f9f67aef3bf7c07350ae60
-=======
->>>>>>> recherche
 });
 
 // route envoi infos inscirption entreprise
@@ -113,8 +93,6 @@ router.get("/labels", async function (req, res, next) {
   console.log("dataLabels", dataLabels);
   res.json({ result: true, dataLabels });
 });
-<<<<<<< HEAD
-=======
 // route rajout infos page entreprise 
 router.put('/:companyId', async function (req, res, next) {
     let token = req.body.token;
@@ -160,9 +138,7 @@ console.log("dataLabels", dataLabels);
     res.json({ result: true, dataLabels });
     }
 );
->>>>>>> 323c19e0a6d6e1d425f9f67aef3bf7c07350ae60
-=======
->>>>>>> recherche
+
 
 
 module.exports = router;
