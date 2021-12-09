@@ -9,7 +9,11 @@ var uid2 = require("uid2");
 var uniqid = require("uniqid");
 var fs = require("fs");
 
+<<<<<<< HEAD
 var cloudinary = require("cloudinary").v2;
+=======
+var cloudinary = require('cloudinary').v2;
+>>>>>>> 107affa15bb4bbe6ff3390e7bebf4ce50bee7fdf
 
 cloudinary.config({
   cloud_name: "djlnzwuj2",
