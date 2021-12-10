@@ -61,6 +61,7 @@ router.put("/:offerId/", async function (req, res, next) {
     }
     if (req.body.description) {
       offer.description = req.body.description;
+      offer.shortDescription = req.body.description;
     }
     if (req.body.commitment) {
       offer.commitments.push({ commitment: req.body.commitment });

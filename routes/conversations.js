@@ -6,8 +6,6 @@ var UserModel = require("../models/users");
 
 ////// CHAT //////
 
-//route test modif conversations
-
 // route test création conversations
 router.post("/new-conversation", async function (req, res, next) {
   //avant de créer une nouvelle conversation, il faut vérifier au préalable qu'il en existe pas déjà une entre les deux interlocuteurs :
@@ -31,62 +29,7 @@ router.post("/new-conversation", async function (req, res, next) {
 
   res.json({ result: true, conversationSaved });
 });
-///conversations/:userID = ne pas oublier de renvoyer le userID
-//route qui affiche les conversations
-router.get("/", async function (req, res, next) {
-  //récupérer le token depuis le front grâce au user renvoyé par le front(props.user)
-  // let token = req.query.token;
 
-  // if (!token) {
-  //     res.json({ result: false });
-  // } else {
-
-  //récupérer le user grâce au user id renvoyé du front (props.user)
-  var user = await UserModel.findById("61af372581dee32b2aedcb55");
-  console.log("user", user);
-  //récupérer l'id de l'entreprise à laquelle le user appartient
-  var companyId = user.companyId;
-  console.log(companyId);
-  //récupérer l'entreprise à laquelle le user appartient
-  var senderCompany = await CompanyModel.findById(companyId);
-  console.log(senderCompany);
-  //récupérer les conversations de l'entreprise (elle correspond au sender dans la collection "conversations")
-  var conversations = await conversationModel.find({ senderId: companyId });
-  console.log(conversations);
-
-  //s'il existe des conversations : if (conversations), le code suivant s'exécute
-
-  let conversationsToDisplay = [];
-
-  for (var i = 0; i < conversations.length; i++) {
-    var receiverCompany = await CompanyModel.findById(
-      conversations[i].receiverID
-    );
-    console.log("id", conversations[i].receiverID);
-    console.log("receiver", receiverCompany);
-    console.log(
-      "message",
-      conversations[i].messages[conversations[i].messages.length - 1].message
-    );
-    conversationsToDisplay.push({
-      id: conversations[i].id,
-      logo: receiverCompany.logo ? receiverCompany.logo : "",
-      message:
-        conversations[i].messages[conversations[i].messages.length - 1].message,
-      date: conversations[i].messages[conversations[i].messages.length - 1]
-        .dateMessageSent
-        ? conversations[i].messages[conversations[i].messages.length - 1]
-            .dateMessageSent
-        : "",
-      companyName: receiverCompany.companyName,
-    });
-  }
-  //ajout d'objets correspondant aux conversations avec toutes les informations qu'on veut afficher dans le front dans un tableau "conversations to display"
-
-  console.log("conversations", conversationsToDisplay);
-
-  res.json({ conversationsToDisplay });
-});
 // FROM DB TO FRONT dans {conversationsToDisplay} : informations à afficher dans le front
 router.post('/new', async function (req, res, next) {
     //avant de créer une nouvelle conversation, il faut vérifier au préalable qu'il en existe pas déjà une entre les deux interlocuteurs : 
@@ -120,6 +63,17 @@ router.get('/:companyId', async function (req, res, next) {
     // if (!token) {
     //     res.json({ result: false });
     // } else {
+
+      const dateFormat = function (date) {
+        var newDate = new Date(date);
+        var format =
+          newDate.getDate() +
+          "/" +
+          (newDate.getMonth() + 1) +
+          "/" +
+          newDate.getFullYear();
+        return format;
+      };
     //récupérer l'id de l'entreprise à laquelle le user appartient
     var companyId = req.params.companyId;
     console.log('companyId', companyId)
@@ -144,7 +98,7 @@ router.get('/:companyId', async function (req, res, next) {
                 id: conversations[i].id,
                 logo: receiverCompany.logo ? receiverCompany.logo : '',
                 message: conversations[i].messages[conversations[i].messages.length - 1].message,
-                date: conversations[i].messages[conversations[i].messages.length - 1].dateMessageSent ? conversations[i].messages[conversations[i].messages.length - 1].dateMessageSent : "",
+                date: conversations[i].messages[conversations[i].messages.length - 1].dateMessageSent ? dateFormat(conversations[i].messages[conversations[i].messages.length - 1].dateMessageSent) : "",
                 companyName: receiverCompany.companyName
             })
     }
@@ -216,6 +170,7 @@ router.get("/messages/:convId", async function (req, res, next) {
 
 // route envoi message dans la conversation + convId + userId
 router.post("/messages", async function (req, res, next) {
+
   //récupérer infos from FRONT : conversationID, contenus message / user (store) / dateMessage
   // let token = req.body.token;
 
