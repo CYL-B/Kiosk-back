@@ -102,6 +102,11 @@ router.put('/:companyId', async function (req, res, next) {
     } else {
         var dataCie = await CompanyModel.findOne({_id: req.params.companyId}); // recupération data company de DB par ID
 // console.log("dataCie", dataCie)
+
+      const update = { description: req.body.description };
+// console.log("update", update);
+      await dataCie.updateOne(update);
+
         if (req.body.labelId) { //////////////
             dataCie.labels.push(req.body.labelId)
         }
