@@ -19,17 +19,14 @@ var offer = await OfferModel.findOne({_id :"61af78bc4292b4fe7bf8a1d9"})
         // if(token){} else{}
     
     var newQuotation = new QuotationModel({
-        clientId: "",
-        providerId:"",
-        answers:[{}],
+        clientId: req.body.clientId,
+        providerId:req.body.providerId,
+        answers:[{answer : req.body.sunshine,
+        question :"Ensoleillement"}, {answer: req.body.package, question:"forfait"}, {answer : req.body.area, question:"superficie"}, {answer : req.body.details, questions:"Autre chose à ajouter "}],
         status : "requested",
-        offerId:"",
+        offerId:req.body.offerId,
         quotationUrl:"",
-        dateQuotationSent: new Date(),
-        dateQuotationPaid: new Date(),
-        dateQuotationAccepted: new Date(),
-        dateQuotationRequested: new Date(),
-        dateDone:new Date()
+        dateQuotationRequested: req.body.date
 
     })
 
