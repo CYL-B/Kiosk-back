@@ -16,16 +16,6 @@ var rechercheRouter = require("./routes/recherche");
 var app = express();
 
 app.use(fileUpload());
-app.locals.dateFormat = function (date) {
-  var newDate = new Date(date);
-  var format =
-    newDate.getDate() +
-    "/" +
-    (newDate.getMonth() + 1) +
-    "/" +
-    newDate.getFullYear();
-  return format;
-};
 
 app.use(logger("dev"));
 app.use(express.json());

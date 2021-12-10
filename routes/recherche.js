@@ -19,6 +19,8 @@ router.post("/recherche", async function (req, res, next) {
   var subcategorieId = req.body.subcategorieId;
   var categorieId = req.body.categorieId;
 
+  //console.log(subcategorieId);
+
   var offerList;
 
   if (subcategorieId === categorieId) {

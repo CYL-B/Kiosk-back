@@ -33,82 +33,18 @@ router.post("/", async function (req, res, next) {
       companyName: req.body.companyName,
     });
     if (!company) {
-      console.log(req.body);
+      //console.log(req.body);
       let newCompany = new CompanyModel({
         companyName: req.body.companyName,
         address: req.body.address ? req.body.address : "",
         siret: req.body.siret ? req.body.siret : "",
+        type: req.body.type ? req.body.type : "",
       });
       let companySaved = await newCompany.save();
       res.json({ result: true, company: companySaved });
     } else {
-      let company = await CompanyModel.findOne({
-        companyName: req.body.companyName,
-      });
-      if (!company) {
-        console.log(req.body);
-        let newCompany = new CompanyModel({
-          companyName: req.body.companyName,
-          address: req.body.address ? req.body.address : "",
-          siret: req.body.siret ? req.body.siret : "",
-          type: req.body.type ? req.body.type : "",
-        });
-        let companySaved = await newCompany.save();
-        res.json({ result: true, company: companySaved });
-      } else {
-        res.json({ result: false, message: "company already exists" });
-      }
+      res.json({ result: false, message: "company already exists" });
     }
-  }
-});
-
-// route rajout infos page entreprise
-router.put("/:companyId", async function (req, res, next) {
-  let token = req.body.token;
-
-  if (!token) {
-    res.json({ result: false });
-  } else {
-    var dataCie = await CompanyModel.findOne({ _id: req.params.companyId }); // recupération data company de DB par ID
-    // console.log("dataCie", dataCie)
-    if (req.body.labelId) {
-      dataCie.labels.push(req.body.labelId);
-    }
-
-    if (req.body.description) {
-      dataCie.description = req.body.description;
-    }
-
-    if (req.body.offer) {
-      let newOffer = new OfferModel({
-        // vréation nouvelle offre
-        offerName: req.body.offerName,
-      });
-      let offerSaved = await newOffer.save();
-      dataCie.offers.push(offerSaved._id); // on push la nouvelle offre via son id dans la cie
-    }
-    // console.log("dataCie", dataCie)
-    await dataCie.save();
-    var dataCieFull = await CompanyModel.findOne({ _id: req.params.companyId })
-      .populate("labels")
-      .populate("offers")
-      .exec();
-    console.log("dataCieFull", dataCieFull);
-    // console.log("dataCie", dataCie);
-
-    // const update = { description: req.body.description };
-    // console.log("update", update);
-    // await dataCie.updateOne(update); // update propriété description dans DB
-    // var newDescCie = await CompanyModel.updateOne(
-    //       { _id: req.params.companyId },
-    //       { description: req.body.description }
-    // ); // update DB avec données du front/user
-    // console.log("update", req.params, req.body);
-    // Modif des infos création page entreprise
-    // infos modifiables depuis front :
-    // FROM FRONT : companyID
-    // FROM FRONT : image / description (main avec affichage en mode short) / labelID / offerID
-    res.json({ result: true, dataCieFull });
   }
 });
 
@@ -116,7 +52,7 @@ router.put("/:companyId", async function (req, res, next) {
 router.get("/labels", async function (req, res, next) {
   // /route/params?query
   var dataLabels = await labelModel.find();
-  console.log("dataLabels", dataLabels);
+  //console.log("dataLabels", dataLabels);
   res.json({ result: true, dataLabels });
 });
 
@@ -131,24 +67,28 @@ router.put("/:companyId", async function (req, res, next) {
     // console.log("dataCie", dataCie)
     if (req.body.labelId) {
       //////////////
-      dataCie.labels.push(req.body.labelId);
+      const labelFound = dataCie.labels.filter(
+        (label) => label._id == req.body.labelId
+      ); // on check si le label a deja ete ajouté
+      labelFound.length === 0 && dataCie.labels.push(req.body.labelId); // si il n'a pas été trouvé, on l'ajoute
     }
 
     if (req.body.description) {
       dataCie.description = req.body.description;
+      dataCie.shortDescription = req.body.description;
     }
 
-    if (req.body.offer) {
+    let offerSaved;
+    if (req.body.offerName) {
       let newOffer = new OfferModel({
         // vréation nouvelle offre
         offerName: req.body.offerName,
       });
-      let offerSaved = await newOffer.save();
+      offerSaved = await newOffer.save();
       dataCie.offers.push(offerSaved._id); // on push la nouvelle offre via son id dans la cie
     }
 
     if (req.body.image) {
-      console.log("req.body.image", req.body.image);
       dataCie.companyImage = req.body.image;
     }
     // console.log("dataCie", dataCie)
@@ -159,8 +99,7 @@ router.put("/:companyId", async function (req, res, next) {
       .exec();
     // console.log("dataCieFull", dataCieFull)
     // console.log("dataCie", dataCie);
-
-    res.json({ result: true, dataCieFull });
+    res.json({ result: true, dataCieFull, offerSaved });
   }
 });
 
