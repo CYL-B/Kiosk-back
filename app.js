@@ -12,6 +12,7 @@ var companiesRouter = require("./routes/companies");
 var offersRouter = require("./routes/offers");
 var conversationsRouter = require("./routes/conversations");
 var rechercheRouter = require("./routes/recherche");
+var quotationsRouter = require ("./routes/quotations")
 
 var app = express();
 
@@ -29,4 +30,5 @@ app.use("/companies", companiesRouter);
 app.use("/offers", offersRouter);
 app.use("/conversations", conversationsRouter);
 app.use("/recherche", rechercheRouter);
+app.use("/quotations", quotationsRouter)
 module.exports = app;
