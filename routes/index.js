@@ -76,9 +76,8 @@ router.post("/image", async function (req, res, next) {
   } else {
     res.json({ result: false, message: resultCopy });
   }
-<<<<<<< HEAD
-=======
-})
+});
+
 //route pour ajouter à la main une company
 router.get("/ajoutcompany", async function (req, res, next) {
   var newCompagny = new CompanyModel({
@@ -120,25 +119,31 @@ router.get("/ajoutcompany", async function (req, res, next) {
   res.json({ result });
 });
 
-
 //route pour ajouter à la main une company
 router.get("/seed", async function (req, res, next) {
-
   await OfferModel.collection.drop();
   await CompanyModel.collection.drop();
   await ConversationModel.collection.drop();
   await UserModel.collection.drop();
-  
+
   var offercafejoyeux = new OfferModel({
     offerName: "Livraison de Café 100% Bio",
-    offerImage: "https://www.lemondedesartisans.fr/sites/lemondedesartisans.fr/files/illustrations/articles/cafe-torrefacteurs.jpg",
-    description: "Découvrez une famille de cafés-restaurants qui emploie et forme des personnes en situation de handicap mental et cognitif.",
-    shortDescription: "Découvrez une famille de cafés-restaurants qui emploie et forme des personnes en situation de handicap mental et cognitif.",
-    commitments: [{
-      commitment: "Emploie et forme des personnes en situation de handicap mental et cognitif",
-    }, {
-      commitment: "Consacre l'intégralité de sa création de valeur à l'inclusion du handicap sous toutes ses formes",
-    }],
+    offerImage:
+      "https://www.lemondedesartisans.fr/sites/lemondedesartisans.fr/files/illustrations/articles/cafe-torrefacteurs.jpg",
+    description:
+      "Découvrez une famille de cafés-restaurants qui emploie et forme des personnes en situation de handicap mental et cognitif.",
+    shortDescription:
+      "Découvrez une famille de cafés-restaurants qui emploie et forme des personnes en situation de handicap mental et cognitif.",
+    commitments: [
+      {
+        commitment:
+          "Emploie et forme des personnes en situation de handicap mental et cognitif",
+      },
+      {
+        commitment:
+          "Consacre l'intégralité de sa création de valeur à l'inclusion du handicap sous toutes ses formes",
+      },
+    ],
     categoriyId: "61af71d1d5cc85a5c2ec1ac3",
     subCategoriyId: "61af71d1d5cc85a5c2ec1ac7",
     questions: [],
@@ -151,18 +156,14 @@ router.get("/seed", async function (req, res, next) {
     companyName: "Café Joyeux",
     logo: "http://172.17.1.123:3000/images/assets/cafejoyeux-logo.png",
     type: "partner",
-    description: "Café Joyeux propose la livraison de café en grain et emploie des serveurs et cuisiniers porteurs d'un handicap mental ou cognitif.",
-    shortDescription: "Café Joyeux propose la livraison de café en grain et emploie des serveurs et cuisiniers porteurs d'un handicap mental ou cognitif.",
+    description:
+      "Café Joyeux propose la livraison de café en grain et emploie des serveurs et cuisiniers porteurs d'un handicap mental ou cognitif.",
+    shortDescription:
+      "Café Joyeux propose la livraison de café en grain et emploie des serveurs et cuisiniers porteurs d'un handicap mental ou cognitif.",
     website: "https://cafejoyeux.fr",
-    labels: [
-      "61b23957f31b3b87e3859a59",
-      "61b23994f31b3b87e3859a5a"
-    ],
-    companyImage:
-      "http://172.17.1.123:3000/images/assets/cafejoyeux-image.jpg",
-    offers: [
-      offercafejoyeux._id
-    ],
+    labels: ["61b23957f31b3b87e3859a59", "61b23994f31b3b87e3859a5a"],
+    companyImage: "http://172.17.1.123:3000/images/assets/cafejoyeux-image.jpg",
+    offers: [offercafejoyeux._id],
     offices: [
       {
         address: "56 Bv Pereire",
@@ -186,23 +187,31 @@ router.get("/seed", async function (req, res, next) {
     lastName: "Aubert",
     phone: "0600000000",
     role: "Ceo",
-    avatar: "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80",
     companyId: cafejoyeux._id,
-    favorites: []
+    favorites: [],
   });
 
   var usercafejoyeux = await usercafejoyeux.save();
 
   var offerkawa = new OfferModel({
     offerName: "Livraison de Café 100% Bio",
-    offerImage: "https://www.noovomoi.ca/content/dam/style-de-vie/migrated/images/2013/09/12/pour-un-cafe-parfait-670-1.jpg",
-    description: "Découvrez notre offre de livraison de café fraîchement torréfié et des solutions de machines à café automatiques afin de proposer une alternative écologique et économique aux capsules.",
-    shortDescription: "Découvrez notre offre de livraison de café fraîchement torréfié et des solutions de machines à café automatiques afin de proposer une alternative écologique et économique aux capsules.",
-    commitments: [{
-      commitment: "Le meilleur du café de spécialité torréfié à Paris",
-    }, {
-      commitment: "Consacre l'intégralité de sa création de valeur à l'inclusion du handicap sous toutes ses formes",
-    }],
+    offerImage:
+      "https://www.noovomoi.ca/content/dam/style-de-vie/migrated/images/2013/09/12/pour-un-cafe-parfait-670-1.jpg",
+    description:
+      "Découvrez notre offre de livraison de café fraîchement torréfié et des solutions de machines à café automatiques afin de proposer une alternative écologique et économique aux capsules.",
+    shortDescription:
+      "Découvrez notre offre de livraison de café fraîchement torréfié et des solutions de machines à café automatiques afin de proposer une alternative écologique et économique aux capsules.",
+    commitments: [
+      {
+        commitment: "Le meilleur du café de spécialité torréfié à Paris",
+      },
+      {
+        commitment:
+          "Consacre l'intégralité de sa création de valeur à l'inclusion du handicap sous toutes ses formes",
+      },
+    ],
     categoriyId: "61af71d1d5cc85a5c2ec1ac3",
     subCategoriyId: "61af71d1d5cc85a5c2ec1ac7",
     questions: [],
@@ -215,18 +224,14 @@ router.get("/seed", async function (req, res, next) {
     companyName: "Kawa",
     logo: "http://172.17.1.123:3000/images/assets/kawa-logo.png",
     type: "partner",
-    description: "Kawa offre un service de livraison de café torréfié et des machines à café automatiques comme alternative écologique aux capsules.",
-    shortDescription: "Kawa offre un service de livraison de café torréfié et des machines à café automatiques comme alternative écologique aux capsules.",
+    description:
+      "Kawa offre un service de livraison de café torréfié et des machines à café automatiques comme alternative écologique aux capsules.",
+    shortDescription:
+      "Kawa offre un service de livraison de café torréfié et des machines à café automatiques comme alternative écologique aux capsules.",
     website: "https://kawa.fr",
-    labels: [
-      "61b23957f31b3b87e3859a59",
-      "61b23994f31b3b87e3859a5a"
-    ],
-    companyImage:
-      "http://172.17.1.123:3000/images/assets/kawa-image.jpg",
-    offers: [
-      offerkawa._id
-    ],
+    labels: ["61b23957f31b3b87e3859a59", "61b23994f31b3b87e3859a5a"],
+    companyImage: "http://172.17.1.123:3000/images/assets/kawa-image.jpg",
+    offers: [offerkawa._id],
     offices: [
       {
         address: "56 Bv Pereire",
@@ -250,23 +255,31 @@ router.get("/seed", async function (req, res, next) {
     lastName: "Aubert",
     phone: "0600000000",
     role: "Ceo",
-    avatar: "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80",
     companyId: kawa._id,
-    favorites: []
+    favorites: [],
   });
 
   var userkawa = await userkawa.save();
-  
+
   var offerslean = new OfferModel({
     offerName: "Mobilier éco-responsable made in France",
-    offerImage: "https://cdn.shopify.com/s/files/1/0191/7701/3348/articles/hero-image-slean-9_1512x-min_2_1400x_aa4d75cd-a3e9-4605-8236-c1ef4ec13a0a_800x800.jpg?v=1630590828",
-    description: "Le bureau Slean s'adapte aux plus petits espaces. Il s'installe et se démonte en 2 minutes et se transforme en deux commodes lorsque la journée se termine.",
-    shortDescription: "Le bureau Slean s'adapte aux plus petits espaces. Il s'installe et se démonte en 2 minutes et se transforme en deux commodes lorsque la journée se termine.",
-    commitments: [{
-      commitment: "S'installe et se démonte en 2 minutes",
-    }, {
-      commitment: "Nous rachetons vos produits quand vous n'en avez plus besoin",
-    }],
+    offerImage:
+      "https://cdn.shopify.com/s/files/1/0191/7701/3348/articles/hero-image-slean-9_1512x-min_2_1400x_aa4d75cd-a3e9-4605-8236-c1ef4ec13a0a_800x800.jpg?v=1630590828",
+    description:
+      "Le bureau Slean s'adapte aux plus petits espaces. Il s'installe et se démonte en 2 minutes et se transforme en deux commodes lorsque la journée se termine.",
+    shortDescription:
+      "Le bureau Slean s'adapte aux plus petits espaces. Il s'installe et se démonte en 2 minutes et se transforme en deux commodes lorsque la journée se termine.",
+    commitments: [
+      {
+        commitment: "S'installe et se démonte en 2 minutes",
+      },
+      {
+        commitment:
+          "Nous rachetons vos produits quand vous n'en avez plus besoin",
+      },
+    ],
     categoriyId: "61af71d1d5cc85a5c2ec1ac3",
     subCategoriyId: "61af71d1d5cc85a5c2ec1ac8",
     questions: [],
@@ -279,18 +292,14 @@ router.get("/seed", async function (req, res, next) {
     companyName: "Slean",
     logo: "http://172.17.1.123:3000/images/assets/slean-logo.png",
     type: "partner",
-    description: "Slean propose un bureau éco-responsable idéal pour télétravailler. Il s'adapte aux petits espaces, fait en France et garanti à vie.",
-    shortDescription: "Slean propose un bureau éco-responsable idéal pour télétravailler. Il s'adapte aux petits espaces, fait en France et garanti à vie.",
+    description:
+      "Slean propose un bureau éco-responsable idéal pour télétravailler. Il s'adapte aux petits espaces, fait en France et garanti à vie.",
+    shortDescription:
+      "Slean propose un bureau éco-responsable idéal pour télétravailler. Il s'adapte aux petits espaces, fait en France et garanti à vie.",
     website: "https://slean.fr",
-    labels: [
-      "61b23957f31b3b87e3859a59",
-      "61b23994f31b3b87e3859a5a"
-    ],
-    companyImage:
-      "http://172.17.1.123:3000/images/assets/slean-image.jpg",
-    offers: [
-      offerslean._id
-    ],
+    labels: ["61b23957f31b3b87e3859a59", "61b23994f31b3b87e3859a5a"],
+    companyImage: "http://172.17.1.123:3000/images/assets/slean-image.jpg",
+    offers: [offerslean._id],
     offices: [
       {
         address: "56 Bv Pereire",
@@ -314,23 +323,30 @@ router.get("/seed", async function (req, res, next) {
     lastName: "Aubert",
     phone: "0600000000",
     role: "Ceo",
-    avatar: "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80",
     companyId: slean._id,
-    favorites: []
+    favorites: [],
   });
 
   var userslean = await userslean.save();
-  
+
   var offerbluedigo = new OfferModel({
     offerName: "Mobilier de seconde main",
-    offerImage: "https://i0.wp.com/www.infoburomag.com/wp-content/uploads/2020/03/Visuel-Bluedigo-002.jpg?fit=3120%2C2080",
-    description: "Découvrez nos offres de mobilier de seconde main. Préparez-vous à adorer votre bureau grâce à nos meubles de qualité.",
-    shortDescription: "Découvrez nos offres de mobilier de seconde main. Préparez-vous à adorer votre bureau grâce à nos meubles de qualité.",
-    commitments: [{
-      commitment: "Mobilier chiné avec amour",
-    }, {
-      commitment: "Livraison 100% électrique",
-    }],
+    offerImage:
+      "https://i0.wp.com/www.infoburomag.com/wp-content/uploads/2020/03/Visuel-Bluedigo-002.jpg?fit=3120%2C2080",
+    description:
+      "Découvrez nos offres de mobilier de seconde main. Préparez-vous à adorer votre bureau grâce à nos meubles de qualité.",
+    shortDescription:
+      "Découvrez nos offres de mobilier de seconde main. Préparez-vous à adorer votre bureau grâce à nos meubles de qualité.",
+    commitments: [
+      {
+        commitment: "Mobilier chiné avec amour",
+      },
+      {
+        commitment: "Livraison 100% électrique",
+      },
+    ],
     categoriyId: "61af71d1d5cc85a5c2ec1ac3",
     subCategoriyId: "61af71d1d5cc85a5c2ec1ac8",
     questions: [],
@@ -343,18 +359,14 @@ router.get("/seed", async function (req, res, next) {
     companyName: "Bluedigo",
     logo: "http://172.17.1.123:3000/images/assets/bluedigo-logo.png",
     type: "partner",
-    description: "Bluedigo propose du mobilier de bureau d'occasion et éco-responsable pour donner un impact positif aux achats des entreprises.",
-    shortDescription: "Bluedigo propose du mobilier de bureau d'occasion et éco-responsable pour donner un impact positif aux achats des entreprises.",
+    description:
+      "Bluedigo propose du mobilier de bureau d'occasion et éco-responsable pour donner un impact positif aux achats des entreprises.",
+    shortDescription:
+      "Bluedigo propose du mobilier de bureau d'occasion et éco-responsable pour donner un impact positif aux achats des entreprises.",
     website: "https://bluedigo.fr",
-    labels: [
-      "61b23957f31b3b87e3859a59",
-      "61b23994f31b3b87e3859a5a"
-    ],
-    companyImage:
-      "http://172.17.1.123:3000/images/assets/bluedigo-image.jpg",
-    offers: [
-      offerbluedigo._id
-    ],
+    labels: ["61b23957f31b3b87e3859a59", "61b23994f31b3b87e3859a5a"],
+    companyImage: "http://172.17.1.123:3000/images/assets/bluedigo-image.jpg",
+    offers: [offerbluedigo._id],
     offices: [
       {
         address: "56 Bv Pereire",
@@ -378,24 +390,30 @@ router.get("/seed", async function (req, res, next) {
     lastName: "Aubert",
     phone: "0600000000",
     role: "Ceo",
-    avatar: "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80",
     companyId: bluedigo._id,
-    favorites: []
+    favorites: [],
   });
 
   var userbluedigo = await userbluedigo.save();
 
-
   var offer1 = new OfferModel({
     offerName: "Nettoyage zero déchet",
-    offerImage: "https://cache.magazine-avantages.fr/data/photo/w1000_ci/5l/zero-dechet-consommation-planete-green.jpg",
-    description: "C'est le moment de se préparer pour un grand ménage de printemps. Mais cette année, on fait le ménage en mode naturel et zéro-déchet.",
-    shortDescription: "C'est le moment de se préparer pour un grand ménage de printemps. Mais cette année, on fait le ménage en mode naturel et zéro-déchet.",
-    commitments: [{
-      commitment: "Zéro déchet",
-    }, {
-      commitment: "Produits 100% Naturel",
-    }],
+    offerImage:
+      "https://cache.magazine-avantages.fr/data/photo/w1000_ci/5l/zero-dechet-consommation-planete-green.jpg",
+    description:
+      "C'est le moment de se préparer pour un grand ménage de printemps. Mais cette année, on fait le ménage en mode naturel et zéro-déchet.",
+    shortDescription:
+      "C'est le moment de se préparer pour un grand ménage de printemps. Mais cette année, on fait le ménage en mode naturel et zéro-déchet.",
+    commitments: [
+      {
+        commitment: "Zéro déchet",
+      },
+      {
+        commitment: "Produits 100% Naturel",
+      },
+    ],
     categoriyId: "61af71d1d5cc85a5c2ec1ac3",
     subCategoriyId: "61af71d1d5cc85a5c2ec1ac4",
     questions: [],
@@ -405,14 +423,20 @@ router.get("/seed", async function (req, res, next) {
 
   var offer2 = new OfferModel({
     offerName: "Ménage 100% Bio & Made in France",
-    offerImage: "https://alternativi.fr/uploads/articles/179/faire-le-menage-en-mode-zero-dechet-e42.jpg",
-    description: "Découvrez nos ménages 100% naturels et 100% bio. Nous sommes à votre disposition pour vous aider à organiser votre ménage.",
-    shortDescription: "Découvrez nos ménages 100% naturels et 100% bio. Nous sommes à votre disposition pour vous aider à organiser votre ménage.",
-    commitments: [{
-      commitment: "Produits fait en Bretagne par une entreprise familliale",
-    }, {
-      commitment: "Toutes les déchets sont recyclés",
-    }],
+    offerImage:
+      "https://alternativi.fr/uploads/articles/179/faire-le-menage-en-mode-zero-dechet-e42.jpg",
+    description:
+      "Découvrez nos ménages 100% naturels et 100% bio. Nous sommes à votre disposition pour vous aider à organiser votre ménage.",
+    shortDescription:
+      "Découvrez nos ménages 100% naturels et 100% bio. Nous sommes à votre disposition pour vous aider à organiser votre ménage.",
+    commitments: [
+      {
+        commitment: "Produits fait en Bretagne par une entreprise familliale",
+      },
+      {
+        commitment: "Toutes les déchets sont recyclés",
+      },
+    ],
     categoriyId: "61af71d1d5cc85a5c2ec1ac3",
     subCategoriyId: "61af71d1d5cc85a5c2ec1ac4",
     questions: [],
@@ -422,14 +446,20 @@ router.get("/seed", async function (req, res, next) {
 
   var offer3 = new OfferModel({
     offerName: "Équipe d'entretien à taille humaine",
-    offerImage: "https://energir.com/blogue/wp-content/uploads/2017/09/bandeau-equipe-menage.jpg",
-    description: "Nos équipes d'entretien sont à votre disposition pour vous aider à organiser votre ménage.",
-    shortDescription: "Nos équipes d'entretien sont à votre disposition pour vous aider à organiser votre ménage.",
-    commitments: [{
-      commitment: "Une équipe dédiée à votre ménage",
-    }, {
-      commitment: "Une gamme de produit 100% naturel",
-    }],
+    offerImage:
+      "https://energir.com/blogue/wp-content/uploads/2017/09/bandeau-equipe-menage.jpg",
+    description:
+      "Nos équipes d'entretien sont à votre disposition pour vous aider à organiser votre ménage.",
+    shortDescription:
+      "Nos équipes d'entretien sont à votre disposition pour vous aider à organiser votre ménage.",
+    commitments: [
+      {
+        commitment: "Une équipe dédiée à votre ménage",
+      },
+      {
+        commitment: "Une gamme de produit 100% naturel",
+      },
+    ],
     categoriyId: "61af71d1d5cc85a5c2ec1ac3",
     subCategoriyId: "61af71d1d5cc85a5c2ec1ac4",
     questions: [],
@@ -439,14 +469,20 @@ router.get("/seed", async function (req, res, next) {
 
   var offer4 = new OfferModel({
     offerName: "Solution de recyclage tout-en-un",
-    offerImage: "https://www.ecologie.gouv.fr/sites/default/files/styles/standard/public/GESTE%20DE%20TRI.png?itok=Rfm2M9wU",
-    description: "Notre solution de recyclage tout-en-un vous permet de recycler toutes vos déchets simplement et rapidement.",
-    shortDescription: "Notre solution de recyclage tout-en-un vous permet de recycler toutes vos déchets simplement et rapidement.",
-    commitments: [{
-      commitment: "Installation rapide et facile",
-    }, {
-      commitment: "Nos équipes d'entretien s'occupe de tout",
-    }],
+    offerImage:
+      "https://www.ecologie.gouv.fr/sites/default/files/styles/standard/public/GESTE%20DE%20TRI.png?itok=Rfm2M9wU",
+    description:
+      "Notre solution de recyclage tout-en-un vous permet de recycler toutes vos déchets simplement et rapidement.",
+    shortDescription:
+      "Notre solution de recyclage tout-en-un vous permet de recycler toutes vos déchets simplement et rapidement.",
+    commitments: [
+      {
+        commitment: "Installation rapide et facile",
+      },
+      {
+        commitment: "Nos équipes d'entretien s'occupe de tout",
+      },
+    ],
     categoriyId: "61af71d1d5cc85a5c2ec1ac3",
     subCategoriyId: "61af71d1d5cc85a5c2ec1ac9",
     questions: [],
@@ -459,18 +495,14 @@ router.get("/seed", async function (req, res, next) {
     companyName: "Ekoklean",
     logo: "http://172.17.1.123:3000/images/assets/ekoklean-logo.png",
     type: "partner",
-    description: "Ekoklean offre un service de ménage écologique et durable pour les entreprises grâce à des produits écologiques et/ou bio-sourcés.",
-    shortDescription: "Ekoklean offre un service de ménage écologique et durable pour les entreprises grâce à des produits écologiques et/ou bio-sourcés.",
+    description:
+      "Ekoklean offre un service de ménage écologique et durable pour les entreprises grâce à des produits écologiques et/ou bio-sourcés.",
+    shortDescription:
+      "Ekoklean offre un service de ménage écologique et durable pour les entreprises grâce à des produits écologiques et/ou bio-sourcés.",
     website: "https://ekoklean.fr",
-    labels: [
-      "61b23957f31b3b87e3859a59",
-      "61b23994f31b3b87e3859a5a"
-    ],
-    companyImage:
-      "http://172.17.1.123:3000/images/assets/ekoklean-image.jpg",
-    offers: [
-      offer1._id
-    ],
+    labels: ["61b23957f31b3b87e3859a59", "61b23994f31b3b87e3859a5a"],
+    companyImage: "http://172.17.1.123:3000/images/assets/ekoklean-image.jpg",
+    offers: [offer1._id],
     offices: [
       {
         address: "56 Bv Pereire",
@@ -490,18 +522,14 @@ router.get("/seed", async function (req, res, next) {
     companyName: "Aura",
     logo: "http://172.17.1.123:3000/images/assets/aura-logo.png",
     type: "partner",
-    description: "Aura propose un nettoyage responsable de vos locaux avec des produits certifiés éco-label et la mise en place du tri des déchets.",
-    shortDescription: "Aura propose un nettoyage responsable de vos locaux avec des produits certifiés éco-label et la mise en place du tri des déchets.",
+    description:
+      "Aura propose un nettoyage responsable de vos locaux avec des produits certifiés éco-label et la mise en place du tri des déchets.",
+    shortDescription:
+      "Aura propose un nettoyage responsable de vos locaux avec des produits certifiés éco-label et la mise en place du tri des déchets.",
     website: "https://www.aura-proprete.fr",
-    labels: [
-      "61b23957f31b3b87e3859a59",
-      "61b23994f31b3b87e3859a5a"
-    ],
-    companyImage:
-      "http://172.17.1.123:3000/images/assets/aura-image.jpg",
-    offers: [
-      offer2._id
-    ],
+    labels: ["61b23957f31b3b87e3859a59", "61b23994f31b3b87e3859a5a"],
+    companyImage: "http://172.17.1.123:3000/images/assets/aura-image.jpg",
+    offers: [offer2._id],
     offices: [
       {
         address: "56 Bv Pereire",
@@ -521,19 +549,14 @@ router.get("/seed", async function (req, res, next) {
     companyName: "Cleany",
     logo: "http://172.17.1.123:3000/images/assets/cleany-logo.png",
     type: "partner",
-    description: "Cleany propose un nettoyage responsable et adapté aux enjeux de bureaux en utilisant des produits d'entretien éco-friendly.",
-    shortDescription: "Cleany propose un nettoyage responsable et adapté aux enjeux de bureaux en utilisant des produits d'entretien éco-friendly.",
+    description:
+      "Cleany propose un nettoyage responsable et adapté aux enjeux de bureaux en utilisant des produits d'entretien éco-friendly.",
+    shortDescription:
+      "Cleany propose un nettoyage responsable et adapté aux enjeux de bureaux en utilisant des produits d'entretien éco-friendly.",
     website: "https://www.cleany.fr",
-    labels: [
-      "61b23957f31b3b87e3859a59",
-      "61b23994f31b3b87e3859a5a"
-    ],
-    companyImage:
-      "http://172.17.1.123:3000/images/assets/cleany-image.jpg",
-    offers: [
-      offer3._id,
-      offer4._id
-    ],
+    labels: ["61b23957f31b3b87e3859a59", "61b23994f31b3b87e3859a5a"],
+    companyImage: "http://172.17.1.123:3000/images/assets/cleany-image.jpg",
+    offers: [offer3._id, offer4._id],
     offices: [
       {
         address: "56 Bv Pereire",
@@ -557,9 +580,10 @@ router.get("/seed", async function (req, res, next) {
     lastName: "Martin",
     phone: "0600000000",
     role: "Ceo",
-    avatar: "https://d25d2506sfb94s.cloudfront.net/cumulus_uploads/userprofile/1285/Patrick-cms.JPG",
+    avatar:
+      "https://d25d2506sfb94s.cloudfront.net/cumulus_uploads/userprofile/1285/Patrick-cms.JPG",
     companyId: ekoklean._id,
-    favorites: []
+    favorites: [],
   });
 
   var user1 = await user1.save();
@@ -573,9 +597,10 @@ router.get("/seed", async function (req, res, next) {
     lastName: "Pereira",
     phone: "0600000000",
     role: "Commerciale",
-    avatar: "https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg",
+    avatar:
+      "https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg",
     companyId: aura._id,
-    favorites: []
+    favorites: [],
   });
 
   var user2 = await user2.save();
@@ -589,9 +614,10 @@ router.get("/seed", async function (req, res, next) {
     lastName: "Dupont",
     phone: "0600000000",
     role: "Commerciale",
-    avatar: "https://cutewallpaper.org/21/profile-pic-for-fb-female/fb-beautiful-girl-Profile-Pictures-fb-beautiful-girl-.jpg",
+    avatar:
+      "https://cutewallpaper.org/21/profile-pic-for-fb-female/fb-beautiful-girl-Profile-Pictures-fb-beautiful-girl-.jpg",
     companyId: cleany._id,
-    favorites: []
+    favorites: [],
   });
 
   var user3 = await user3.save();
@@ -625,39 +651,48 @@ router.get("/seed", async function (req, res, next) {
     lastName: "Dury",
     phone: "0600000000",
     role: "Teacher",
-    avatar: "https://miro.medium.com/fit/c/262/262/2*VzC6KSJYEN87rYcqt7LIiA.jpeg",
+    avatar:
+      "https://miro.medium.com/fit/c/262/262/2*VzC6KSJYEN87rYcqt7LIiA.jpeg",
     companyId: capsule._id,
-    favorites: []
+    favorites: [],
   });
 
   var user4 = await user4.save();
 
   var conversation1 = new ConversationModel({
-    messages: [{
-      message: "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
-      userId: user4._id,
-      dateMessageSent: "2021-12-13T12:22:29Z"
-    }, {
-      message: "Super",
-      userId: user1._id,
-      dateMessageSent: "2021-12-13T12:23:29Z"
-    }, {
-      message: "Notre équipe est prête à vous répondre",
-      userId: user1._id,
-      dateMessageSent: "2021-12-13T12:25:29Z"
-    }, {
-      message: "Merci !",
-      userId: user4._id,
-      dateMessageSent: "2021-12-13T12:45:29Z"
-    }, {
-      message: "Êtes-vous prêt à nous rejoindre ?",
-      userId: user1._id,
-      dateMessageSent: "2021-12-13T12:46:29Z"
-    }, {
-      message: "Je dois encore réfléchir, merci",
-      userId: user4._id,
-      dateMessageSent: "2021-12-13T12:53:29Z"
-    }],
+    messages: [
+      {
+        message:
+          "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
+        userId: user4._id,
+        dateMessageSent: "2021-12-13T12:22:29Z",
+      },
+      {
+        message: "Super",
+        userId: user1._id,
+        dateMessageSent: "2021-12-13T12:23:29Z",
+      },
+      {
+        message: "Notre équipe est prête à vous répondre",
+        userId: user1._id,
+        dateMessageSent: "2021-12-13T12:25:29Z",
+      },
+      {
+        message: "Merci !",
+        userId: user4._id,
+        dateMessageSent: "2021-12-13T12:45:29Z",
+      },
+      {
+        message: "Êtes-vous prêt à nous rejoindre ?",
+        userId: user1._id,
+        dateMessageSent: "2021-12-13T12:46:29Z",
+      },
+      {
+        message: "Je dois encore réfléchir, merci",
+        userId: user4._id,
+        dateMessageSent: "2021-12-13T12:53:29Z",
+      },
+    ],
     senderID: capsule._id,
     receiverID: ekoklean._id,
   });
@@ -665,27 +700,34 @@ router.get("/seed", async function (req, res, next) {
   var conversation1 = await conversation1.save();
 
   var conversation2 = new ConversationModel({
-    messages: [{
-      message: "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
-      userId: user4._id,
-      dateMessageSent: "2021-12-13T11:22:29Z"
-    }, {
-      message: "Super",
-      userId: user1._id,
-      dateMessageSent: "2021-12-13T11:29:29Z"
-    }, {
-      message: "Notre équipe est prête à vous répondre",
-      userId: user1._id,
-      dateMessageSent: "2021-12-13T11:40:29Z"
-    }, {
-      message: "Merci !",
-      userId: user4._id,
-      dateMessageSent: "2021-12-13T11:41:29Z"
-    }, {
-      message: "Êtes-vous prêt à nous rejoindre ?",
-      userId: user1._id,
-      dateMessageSent: "2021-12-13T11:46:29Z"
-    }],
+    messages: [
+      {
+        message:
+          "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
+        userId: user4._id,
+        dateMessageSent: "2021-12-13T11:22:29Z",
+      },
+      {
+        message: "Super",
+        userId: user1._id,
+        dateMessageSent: "2021-12-13T11:29:29Z",
+      },
+      {
+        message: "Notre équipe est prête à vous répondre",
+        userId: user1._id,
+        dateMessageSent: "2021-12-13T11:40:29Z",
+      },
+      {
+        message: "Merci !",
+        userId: user4._id,
+        dateMessageSent: "2021-12-13T11:41:29Z",
+      },
+      {
+        message: "Êtes-vous prêt à nous rejoindre ?",
+        userId: user1._id,
+        dateMessageSent: "2021-12-13T11:46:29Z",
+      },
+    ],
     senderID: capsule._id,
     receiverID: aura._id,
   });
@@ -693,23 +735,29 @@ router.get("/seed", async function (req, res, next) {
   var conversation2 = await conversation2.save();
 
   var conversation3 = new ConversationModel({
-    messages: [{
-      message: "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
-      userId: user4._id,
-      dateMessageSent: "2021-12-13T07:12:29Z"
-    }, {
-      message: "Super",
-      userId: user1._id,
-      dateMessageSent: "2021-12-13T08:22:29Z"
-    }, {
-      message: "Notre équipe est prête à vous répondre",
-      userId: user1._id,
-      dateMessageSent: "2021-12-13T08:23:29Z"
-    }, {
-      message: "Merci !",
-      userId: user4._id,
-      dateMessageSent: "2021-12-13T08:29:29Z"
-    }],
+    messages: [
+      {
+        message:
+          "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
+        userId: user4._id,
+        dateMessageSent: "2021-12-13T07:12:29Z",
+      },
+      {
+        message: "Super",
+        userId: user1._id,
+        dateMessageSent: "2021-12-13T08:22:29Z",
+      },
+      {
+        message: "Notre équipe est prête à vous répondre",
+        userId: user1._id,
+        dateMessageSent: "2021-12-13T08:23:29Z",
+      },
+      {
+        message: "Merci !",
+        userId: user4._id,
+        dateMessageSent: "2021-12-13T08:29:29Z",
+      },
+    ],
     senderID: capsule._id,
     receiverID: cleany._id,
   });
@@ -717,19 +765,24 @@ router.get("/seed", async function (req, res, next) {
   var conversation3 = await conversation3.save();
 
   var conversation4 = new ConversationModel({
-    messages: [{
-      message: "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
-      userId: user4._id,
-      dateMessageSent: "2021-12-13T07:22:29Z"
-    }, {
-      message: "Super",
-      userId: userkawa._id,
-      dateMessageSent: "2021-12-13T07:25:29Z"
-    }, {
-      message: "Notre équipe est prête à vous répondre",
-      userId: userkawa._id,
-      dateMessageSent: "2021-12-13T07:26:29Z"
-    }],
+    messages: [
+      {
+        message:
+          "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
+        userId: user4._id,
+        dateMessageSent: "2021-12-13T07:22:29Z",
+      },
+      {
+        message: "Super",
+        userId: userkawa._id,
+        dateMessageSent: "2021-12-13T07:25:29Z",
+      },
+      {
+        message: "Notre équipe est prête à vous répondre",
+        userId: userkawa._id,
+        dateMessageSent: "2021-12-13T07:26:29Z",
+      },
+    ],
     senderID: capsule._id,
     receiverID: kawa._id,
   });
@@ -737,15 +790,19 @@ router.get("/seed", async function (req, res, next) {
   var conversation4 = await conversation4.save();
 
   var conversation5 = new ConversationModel({
-    messages: [{
-      message: "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
-      userId: user4._id,
-      dateMessageSent: "2021-12-13T10:01:29Z"
-    }, {
-      message: "Super",
-      userId: usercafejoyeux._id,
-      dateMessageSent: "2021-12-13T10:03:29Z"
-    }],
+    messages: [
+      {
+        message:
+          "Bonjour, je vous contacte pour avoir plus d'information sur votre offre",
+        userId: user4._id,
+        dateMessageSent: "2021-12-13T10:01:29Z",
+      },
+      {
+        message: "Super",
+        userId: usercafejoyeux._id,
+        dateMessageSent: "2021-12-13T10:03:29Z",
+      },
+    ],
     senderID: capsule._id,
     receiverID: cafejoyeux._id,
   });
@@ -761,9 +818,10 @@ router.get("/seed", async function (req, res, next) {
     lastName: "Pereira",
     phone: "0600000000",
     role: "Commerciale",
-    avatar: "https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg",
+    avatar:
+      "https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg",
     companyId: capsule._id,
-    favorites: []
+    favorites: [],
   });
 
   var usertest = await usertest.save();
@@ -772,7 +830,6 @@ router.get("/seed", async function (req, res, next) {
 
   res.json({ result });
 });
-
 
 router.post("/rechercheparlabar", async function (req, res, next) {
   var recherche = req.body.recherche;
@@ -785,7 +842,6 @@ router.post("/rechercheparlabar", async function (req, res, next) {
       { description: shortDescription },
     ],
   });
->>>>>>> 4cd10235451bb558733f8c3b849d45f206c5287c
 });
 
 module.exports = router;
