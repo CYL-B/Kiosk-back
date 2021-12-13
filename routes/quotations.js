@@ -8,8 +8,8 @@ router.get("/quote-request", async function (req, res, next) {
     // let token = req.params.token;
     // if(token){} else{}
 
-var offer = await OfferModel.findOne({_id :"61af78bc4292b4fe7bf8a1d9"})
-
+var offer = await OfferModel.findOne({id :"61af78bc4292b4fe7bf8a1d9"})
+console.log(offer)
       res.json({ result: true, offer });
     });
 
@@ -22,7 +22,7 @@ var offer = await OfferModel.findOne({_id :"61af78bc4292b4fe7bf8a1d9"})
         clientId: req.body.clientId,
         providerId:req.body.providerId,
         answers:[{answer : req.body.sunshine,
-        question :"Ensoleillement"}, {answer: req.body.package, question:"forfait"}, {answer : req.body.area, question:"superficie"}, {answer : req.body.details, questions:"Autre chose à ajouter "}],
+        question :"Ensoleillement"}, {answer: req.body.forfait, question:"forfait"}, {answer : req.body.area, question:"superficie"}, {answer : req.body.details, questions:"Autre chose à ajouter "}],
         status : "requested",
         offerId:req.body.offerId,
         quotationUrl:"",
