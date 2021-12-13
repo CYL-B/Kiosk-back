@@ -228,7 +228,7 @@ router.get("/messages/:convId/:userId", async function (req, res, next) {
 });
 
 // route envoi message dans la conversation + convId + userId
-router.post("/messages/", async function (req, res, next) {
+router.post("/messages", async function (req, res, next) {
   //récupérer infos from FRONT : conversationID, contenus message / user (store) / dateMessage
   // let token = req.body.token;
 
