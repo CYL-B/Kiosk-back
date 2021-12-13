@@ -95,4 +95,26 @@ router.post("/avatar", async function (req, res, next) {
   }
 });
 
+router.put("/updateuserdata", async function (req, res, next) {
+  var updateUser = await UserModel.findOneAndUpdate(
+    { token: req.body.token },
+    {
+      $set: {
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phone: req.body.phone,
+        role: req.body.role,
+      },
+    }
+  );
+
+  if (updateUser) {
+    var userData = await UserModel.find({ token: req.body.token });
+    res.json({ result: true, userData });
+  } else {
+    res.json({ result: false });
+  }
+});
+
 module.exports = router;
