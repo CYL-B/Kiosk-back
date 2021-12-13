@@ -16,7 +16,7 @@ router.get('/:companyId/:token', async function (req, res, next) { // /route/par
   } else {
     var company = await CompanyModel.findById(req.params.companyId).populate("labels").populate("offers").exec();
     // console.log("company", company.labels);
-    // console.log("company", company);
+    console.log("company", company);
     res.json({ result: true, company });
   }
 });
