@@ -24,6 +24,11 @@ router.post("/add-quotation", async function (req, res, next) {
 if(!token){
     res.json({ result: false})
 } else{
+    var existingQuotation = await QuotationModel.find({offerId : req.body.offerId})
+    if(existingQuotation){
+        var erreur ="Vous avez déjà demandé un devis pour cette offre. Voulez-vous redemander un devis ?"
+        res.json({ result: false, erreur})
+    } else{
     var newQuotation = new QuotationModel({
         clientId: req.body.clientId,
         providerId: req.body.providerId,
@@ -40,7 +45,7 @@ if(!token){
 
     var quotationSaved = await newQuotation.save();
 
-    res.json({ result: true, quotationSaved })};
+    res.json({ result: true, quotationSaved })};}
 });
 
 router.get("/find-quotation/:token/:companyId", async function (req, res, next){
