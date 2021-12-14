@@ -4,78 +4,132 @@ var router = express.Router();
 var OfferModel = require("../models/offers");
 var QuotationModel = require("../models/quotations")
 
+//routes pour sendquote
+router.get("/quotation-info/:token/:reqQuoteId/", async function (req, res, next) {
+
+    let token = req.params.token;
+    let quoteId = req.params.reqQuoteId
+    if (!token) { res.json({ result: false }) } else {
+        // var offer = await OfferModel.findOne({ id: offerId })
+        // console.log("offer", offer);
+
+        var quotationFromBack = await QuotationModel.findById({_id : quoteId})
+       var answers = quotationFromBack.answers;
+
+
+        console.log("quotation", answers)
+            
+
+        res.json({ result: true, quotationFromBack, answers });}
+});
+
+router.put("/send-quotation", async function (req, res, next) {
+
+    var token = req.body.token;
+
+    if (!token) { res.json({ result: false }) } else {
+//on cherche le devis à modifier et on modifie le statut du devis 
+        var quotationToSend = await QuotationModel.updateOne({id: req.body.quoteId},
+            {status : "sent"})
+
+console.log("status",quotationToSend )
+        res.json({ result: true, quotationToSend });}
+    });
+
+    //routes pour demandes de devis
 router.get("/quote-request/:token/:reqOfferId/", async function (req, res, next) {
 
     let token = req.params.token;
-    let offerId= req.params.reqOfferId
-    if (!token) { res.json({ result: false}) } else {
-
+    let offerId = req.params.reqOfferId
+    if (!token) { res.json({ result: false }) } else {
 
         var offer = await OfferModel.findOne({ _id: offerId })
         console.log("offer", offer)
-
+        
+        var existingQuotation = await QuotationModel.find({offerId : req.body.offerId})
+        console.log("quotation", existingQuotation)
+            if(existingQuotation){
+                var erreur ="Vous avez déjà demandé un devis pour cette offre. Voulez-vous redemander un devis ?"
+                res.json({ result: false, erreur, offer})} else{
 
         res.json({ result: true, offer });
-    }
+    }}
 });
 
+//ajout d'une demande de devis
 router.post("/add-quotation", async function (req, res, next) {
     let token = req.body.token;
-if(!token){
-    res.json({ result: false})
-} else{
-    var existingQuotation = await QuotationModel.find({offerId : req.body.offerId})
-    if(existingQuotation){
-        var erreur ="Vous avez déjà demandé un devis pour cette offre. Voulez-vous redemander un devis ?"
-        res.json({ result: false, erreur})
-    } else{
-    var newQuotation = new QuotationModel({
-        clientId: req.body.clientId,
-        providerId: req.body.providerId,
-        answers: [{
-            answer: req.body.sunshine,
-            question: "Ensoleillement"
-        }, { answer: req.body.forfait, question: "forfait" }, { answer: req.body.area, question: "superficie" }, { answer: req.body.details, question: "Autre chose à ajouter " }],
-        status: "requested",
-        offerId: req.body.offerId,
-        quotationUrl: "",
-        dateQuotationRequested: req.body.date
+    if (!token) {
+        res.json({ result: false })
+    } else {
+            var newQuotation = new QuotationModel({
+                clientId: req.body.clientId,
+                providerId: req.body.providerId,
+                answers: [{
+                    answer: req.body.sunshine,
+                    question: "Ensoleillement"
+                }, { answer: req.body.forfait, question: "forfait" }, { answer: req.body.area, question: "superficie" }, { answer: req.body.details, question: "Autre chose à ajouter " }],
+                status: "requested",
+                offerId: req.body.offerId,
+                quotationUrl: "",
+                dateQuotationRequested: req.body.date
 
-    })
+            })
 
-    var quotationSaved = await newQuotation.save();
+            var quotationSaved = await newQuotation.save();
 
-    res.json({ result: true, quotationSaved })};}
+            res.json({ result: true, quotationSaved })
+        };
+    
 });
 
-router.get("/find-quotation/:token/:companyId", async function (req, res, next){
+router.get("/find-quotation/:token/:companyId", async function (req, res, next) {
+    //quotations correspondent aux devis côté client
+    //requests correspondent aux devis côté prestataire
 
     let companyId = req.params.companyId
     let token = req.params.token
-    if (!token){
-        res.json({ result: false})
-    } else{
+    if (!token) {
+        res.json({ result: false })
+    } else {
 
-        
-    var quotations = await QuotationModel.find({clientId : companyId})
-    var quotationsToDisplay = []
-    for (var i=0; i<quotations.length; i++){
-        offer = await OfferModel.findById(quotations[i].offerId);
-        console.log("offer", offer)
-        provider = await companyModel.findById(quotations[i].providerId)
-console.log("provider",provider)
-        
-        quotationsToDisplay.push({
-            logo: provider.logo,
-            name : provider.companyName,
-            offer : offer.offerName,
-            status : quotations[i].status
 
-        })
+        var quotations = await QuotationModel.find({ clientId: companyId })
+        var requests = await QuotationModel.find({providerId: companyId})
+        var quotationsToDisplay=[]
+        var requestsToDisplay=[]
+
+        for (var i = 0; i < quotations.length; i++) {
+            offer = await OfferModel.findById(quotations[i].offerId);
+            console.log("offer", offer)
+            provider = await companyModel.findById(quotations[i].providerId)
+
+
+            quotationsToDisplay.push({
+                id:quotations[i].id,
+                logo: provider.logo,
+                name: provider.companyName,
+                offer: offer.offerName,
+                status: quotations[i].status
+
+            })
+        }
+        
+
+        for(var i=0; i<requests.length; i++){
+            client = await companyModel.findById(requests[i].clientId)
+            offer = await OfferModel.findById(requests[i].offerId)
+            requestsToDisplay.push({
+                id : requests[i].id,
+                logo:client.logo,
+                name:client.companyName,
+                offer:offer.offerName,
+                status:requests[i].status
+            })
+        }
+        
+        res.json({ result: true, quotationsToDisplay, requestsToDisplay })
     }
-    console.log("quotations", quotationsToDisplay)
-
-    res.json({ result: true, quotationsToDisplay })}
 })
 
 module.exports = router;
