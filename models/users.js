@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var favoritesSchema = mongoose.Schema({
     companyId: {type: mongoose.Schema.Types.ObjectId, ref: 'companies'},
-    offerId: String
+    offerId: {type: mongoose.Schema.Types.ObjectId, ref: 'offers'}
 });
 
 var userSchema = mongoose.Schema({

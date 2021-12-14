@@ -3,6 +3,7 @@ var router = express.Router();
 
 var OfferModel = require("../models/offers");
 var CompanyModel = require("../models/companies");
+var UserModel = require("../models/users");
 
 ////// OFFERS //////
 // route affichage infos offres
@@ -86,6 +87,27 @@ router.delete("/:offerID", function (req, res, next) {
   } else {
     // Suppression d'une offre
     res.json({ result: true });
+  }
+});
+
+
+// route to like an offer
+router.post("/like", async function (req, res, next) {
+  let token = req.body.token;
+  if (!token) {
+    res.json({ result: false });
+  } else {
+    var user = await UserModel.findById(req.body.userId);
+    if(req.body.offerId) {
+      if(user.favorites.some(e => e.offerId && e.offerId == req.body.offerId)) {
+        user.favorites = user.favorites.filter(e => e.companyId || ( e.offerId && e.offerId != req.body.offerId ));
+      } else {
+        user.favorites.push({ offerId: req.body.offerId });
+      }
+    }
+    await user.save();
+    user = await UserModel.findById(req.body.userId);
+    res.json({ result: true, user });
   }
 });
 

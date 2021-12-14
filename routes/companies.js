@@ -4,6 +4,7 @@ var router = express.Router();
 var CompanyModel = require("../models/companies");
 var labelModel = require("../models/labels");
 var OfferModel = require("../models/offers");
+var UserModel = require("../models/users");
 
 ////// PAGE ENTREPRISE //////
 // route affichage infos inscription entreprise
@@ -125,6 +126,26 @@ router.put("/labels/:companyId/:labelId", async function (req, res, next) {
     .populate("offers")
     .exec();
   res.json({ result: true, dataLabelsCieUpdated });
+});
+
+// route to like a company
+router.post("/like", async function (req, res, next) {
+  let token = req.body.token;
+  if (!token) {
+    res.json({ result: false });
+  } else {
+    var user = await UserModel.findById(req.body.userId);
+    if(req.body.companyId) {
+      if(user.favorites.some(e => e.companyId && e.companyId == req.body.companyId)) {
+        user.favorites = user.favorites.filter(e => e.offerId || ( e.companyId && e.companyId != req.body.companyId ));
+      } else {
+        user.favorites.push({ companyId: req.body.companyId });
+      }
+    }
+    await user.save();
+    user = await UserModel.findById(req.body.userId);
+    res.json({ result: true, user });
+  }
 });
 
 module.exports = router;
