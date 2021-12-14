@@ -1,38 +1,81 @@
 var express = require("express");
+const companyModel = require("../models/companies");
 var router = express.Router();
 var OfferModel = require("../models/offers");
-var QuotationModel= require("../models/quotations")
+var QuotationModel = require("../models/quotations")
 
-router.get("/quote-request", async function (req, res, next) {
-    //récupérer le token et offerId
-    // let token = req.params.token;
-    // if(token){} else{}
+router.get("/quote-request/:token/:reqOfferId/", async function (req, res, next) {
 
-var offer = await OfferModel.findOne({id :"61af78bc4292b4fe7bf8a1d9"})
-console.log(offer)
-      res.json({ result: true, offer });
-    });
+    let token = req.params.token;
+    let offerId= req.params.reqOfferId
+    if (!token) { res.json({ result: false}) } else {
 
-    router.post("/add-quotation", async function (req, res, next) {
-        //récupérer le token et offerId
-        // let token = req.params.token;
-        // if(token){} else{}
-    
+
+        var offer = await OfferModel.findOne({ _id: offerId })
+        console.log("offer", offer)
+
+
+        res.json({ result: true, offer });
+    }
+});
+
+router.post("/add-quotation", async function (req, res, next) {
+    let token = req.body.token;
+if(!token){
+    res.json({ result: false})
+} else{
+    var existingQuotation = await QuotationModel.find({offerId : req.body.offerId})
+    if(existingQuotation){
+        var erreur ="Vous avez déjà demandé un devis pour cette offre. Voulez-vous redemander un devis ?"
+        res.json({ result: false, erreur})
+    } else{
     var newQuotation = new QuotationModel({
         clientId: req.body.clientId,
-        providerId:req.body.providerId,
-        answers:[{answer : req.body.sunshine,
-        question :"Ensoleillement"}, {answer: req.body.forfait, question:"forfait"}, {answer : req.body.area, question:"superficie"}, {answer : req.body.details, questions:"Autre chose à ajouter "}],
-        status : "requested",
-        offerId:req.body.offerId,
-        quotationUrl:"",
+        providerId: req.body.providerId,
+        answers: [{
+            answer: req.body.sunshine,
+            question: "Ensoleillement"
+        }, { answer: req.body.forfait, question: "forfait" }, { answer: req.body.area, question: "superficie" }, { answer: req.body.details, question: "Autre chose à ajouter " }],
+        status: "requested",
+        offerId: req.body.offerId,
+        quotationUrl: "",
         dateQuotationRequested: req.body.date
 
     })
 
     var quotationSaved = await newQuotation.save();
-    
-          res.json({ result: true, quotationSaved });
-        });
 
-    module.exports = router;
+    res.json({ result: true, quotationSaved })};}
+});
+
+router.get("/find-quotation/:token/:companyId", async function (req, res, next){
+
+    let companyId = req.params.companyId
+    let token = req.params.token
+    if (!token){
+        res.json({ result: false})
+    } else{
+
+        
+    var quotations = await QuotationModel.find({clientId : companyId})
+    var quotationsToDisplay = []
+    for (var i=0; i<quotations.length; i++){
+        offer = await OfferModel.findById(quotations[i].offerId);
+        console.log("offer", offer)
+        provider = await companyModel.findById(quotations[i].providerId)
+console.log("provider",provider)
+        
+        quotationsToDisplay.push({
+            logo: provider.logo,
+            name : provider.companyName,
+            offer : offer.offerName,
+            status : quotations[i].status
+
+        })
+    }
+    console.log("quotations", quotationsToDisplay)
+
+    res.json({ result: true, quotationsToDisplay })}
+})
+
+module.exports = router;
