@@ -12,7 +12,11 @@ router.get('/:companyId/:token', async function (req, res, next) { // /route/par
     } else {
         var ratings = await ratingModel.find().populate("userId").populate("clientId").exec();
 // console.log("ratings", ratings);
-    res.json({ result: true, ratings });
+        var avg = await ratingModel.aggregate([{$group: {
+            _id : "$providerId",
+            averageNoteByCie: { $avg: "$rating" } // age moyen par ville
+        }}]);
+    res.json({ result: true, ratings, avg });
     }
 });
 
