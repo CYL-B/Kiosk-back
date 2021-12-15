@@ -10,6 +10,7 @@ var uniqid = require("uniqid");
 var fs = require("fs");
 
 var cloudinary = require("cloudinary").v2;
+const { stringify } = require("querystring");
 
 cloudinary.config({
   cloud_name: "djlnzwuj2",
@@ -96,10 +97,13 @@ router.post("/avatar", async function (req, res, next) {
 });
 
 router.put("/updateuserdata", async function (req, res, next) {
+  var token = req.body.token;
+  console.log("token stringigy", token);
   var updateUser = await UserModel.findOneAndUpdate(
-    { token: req.body.token },
+    { token: token },
     {
       $set: {
+        avatar: req.body.avatar,
         email: req.body.email,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -110,7 +114,8 @@ router.put("/updateuserdata", async function (req, res, next) {
   );
 
   if (updateUser) {
-    var userData = await UserModel.find({ token: req.body.token });
+    var userData = await UserModel.findOne({ token: token });
+    console.log(userData);
     res.json({ result: true, userData });
   } else {
     res.json({ result: false });
