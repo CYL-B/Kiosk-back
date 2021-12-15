@@ -10,6 +10,7 @@ var OfferModel = require("../models/offers");
 var UserModel = require("../models/users");
 var CategoryModel = require("../models/categories");
 var ConversationModel = require("../models/conversations");
+var packModel = require("../models/packs");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
