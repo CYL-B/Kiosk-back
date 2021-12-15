@@ -6,6 +6,11 @@ var labelModel = require("../models/labels");
 var OfferModel = require("../models/offers");
 var UserModel = require("../models/users");
 
+var uniqid = require("uniqid");
+var fs = require("fs");
+
+var cloudinary = require("cloudinary").v2;
+
 ////// PAGE ENTREPRISE //////
 // route affichage infos inscription entreprise
 router.get("/:companyId/:token", async function (req, res, next) {
@@ -148,4 +153,76 @@ router.post("/like", async function (req, res, next) {
   }
 });
 
+////// PAGE PROFIL ENTREPRISE //////
+
+router.get("/profile/:token/:companyId", async function (req, res, next){
+
+  var token = req.params.token
+  var companyId = req.params.companyId
+
+  if (!token) {
+    res.json({ result: false });}else{
+
+
+  var company = await CompanyModel.findById(companyId)
+console.log("company", company)
+
+var siret = company.siret
+var companyName = company.companyName
+var logo = company.logo
+console.log("logo", companyName)
+
+  res.json({ result: true, siret, companyName,logo});}
+
+})
+
+router.post("/logo", async function(req, res, next){
+
+  console.log(req.files);
+  var imagePath = "./tmp/" + uniqid() + ".jpg";
+  var resultCopy = await req.files.logo.mv(imagePath);
+
+  if (!resultCopy) {
+    var resultCloudinary = await cloudinary.uploader.upload(imagePath);
+    console.log(resultCloudinary);
+    if (resultCloudinary.url) {
+      fs.unlinkSync(imagePath);
+      res.json({
+        result: true,
+        message: "image uploaded",
+        url: resultCloudinary.url,
+      });
+    }
+  } else {
+    res.json({ result: false, message: resultCopy });
+  }
+
+
+  res.json({ result: true, siret, companyName})
+})
+
+
+router.put("/update-company", async function (req, res, next){
+
+  var token = req.body.token;
+  
+  if (!token) {
+    res.json({ result: false });}else{
+
+  var updateCompany = await CompanyModel.updateOne({_id: "61b9bf541fd7c01b559ebf64"},{
+    companyName : req.body.companyName,
+    logo: req.body.logo,
+    siret : req.body.siret
+  }
+
+  );
+
+  if (updateCompany) {
+    var companyData = await CompanyModel.findOne({ id: req.body.companyId });
+    console.log(companyData);
+    res.json({ result: true, companyData });
+  } else {
+    res.json({ result: false });
+  }}
+})
 module.exports = router;
