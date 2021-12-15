@@ -5,8 +5,26 @@ var CompanyModel = require("../models/companies");
 var labelModel = require("../models/labels");
 var OfferModel = require("../models/offers");
 var UserModel = require("../models/users");
+var RatingModel = require("../models/ratings");
 
 ////// PAGE ENTREPRISE //////
+
+// route affichage infos inscription entreprise
+router.get("/all/:token", async function (req, res, next) {
+  // /route/params?query
+  let token = req.params.token;
+  // console.log("companyiD", req.params.token, req.params.companyId);
+  if (!token) {
+    res.json({ result: false });
+  } else {
+    var companies = await CompanyModel.find({type: "partner"}, {_id: 1});
+    var companies = companies.map(company => company._id);
+    //console.log("company", company.labels);
+    //console.log("company", company);
+    res.json({ result: true, companies });
+  }
+});
+
 // route affichage infos inscription entreprise
 router.get("/:companyId/:token", async function (req, res, next) {
   // /route/params?query
@@ -19,9 +37,13 @@ router.get("/:companyId/:token", async function (req, res, next) {
       .populate("labels")
       .populate("offers")
       .exec();
+
+    var ratings = await RatingModel.find({ providerId: req.params.companyId })
+      .populate("clientId")
+      .exec();
     //console.log("company", company.labels);
     //console.log("company", company);
-    res.json({ result: true, company });
+    res.json({ result: true, company, ratings });
   }
 });
 
