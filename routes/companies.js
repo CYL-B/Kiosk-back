@@ -100,23 +100,23 @@ router.put("/update-company", async function (req, res, next) {
 router.get("/all/:token", async function (req, res, next) {
   // /route/params?query
   let token = req.params.token;
-  // console.log("companyiD", req.params.token, req.params.companyId);
+// console.log("companyiD", req.params.token, req.params.companyId);
   if (!token) {
     res.json({ result: false });
   } else {
     var companies = await CompanyModel.find({ type: "partner" }, { _id: 1 });
     var companies = companies.map(company => company._id);
-    //console.log("company", company.labels);
-    //console.log("company", company);
+//console.log("company", company.labels);
+//console.log("company", company);
     res.json({ result: true, companies });
   }
 });
 
 // route affichage infos inscription entreprise
 router.get("/:companyId/:token", async function (req, res, next) {
-  // /route/params?query
+
   let token = req.params.token;
-  // console.log("companyiD", req.params.token, req.params.companyId);
+// console.log("companyiD", req.params.token, req.params.companyId);
   if (!token) {
     res.json({ result: false });
   } else {
@@ -128,8 +128,8 @@ router.get("/:companyId/:token", async function (req, res, next) {
     var ratings = await RatingModel.find({ providerId: req.params.companyId })
       .populate("clientId")
       .exec();
-    //console.log("company", company.labels);
-    //console.log("company", company);
+//console.log("company", company.labels);
+//console.log("company", company);
     res.json({ result: true, company, ratings });
   }
 });
@@ -143,7 +143,7 @@ router.post("/", async function (req, res, next) {
       companyName: req.body.companyName,
     });
     if (!company) {
-      //console.log(req.body);
+//console.log(req.body);
       let newCompany = new CompanyModel({
         companyName: req.body.companyName,
         address: req.body.address ? req.body.address : "",
@@ -162,21 +162,20 @@ router.post("/", async function (req, res, next) {
 router.get("/labels", async function (req, res, next) {
   // /route/params?query
   var dataLabels = await labelModel.find();
-  //console.log("dataLabels", dataLabels);
+//console.log("dataLabels", dataLabels);
   res.json({ result: true, dataLabels });
 });
 
 // route rajout infos + labels page entreprise
 router.put("/:companyId", async function (req, res, next) {
-  let token = req.body.token;
 
+  let token = req.body.token;
   if (!token) {
     res.json({ result: false });
   } else {
     var dataCie = await CompanyModel.findOne({ _id: req.params.companyId }); // recupération data company de DB par ID
-    // console.log("dataCie", dataCie)
+// console.log("dataCie", dataCie)
     if (req.body.labelId) {
-      //////////////
       const labelFound = dataCie.labels.filter(
         (label) => label._id == req.body.labelId
       ); // on check si le label a deja ete ajouté
@@ -201,29 +200,27 @@ router.put("/:companyId", async function (req, res, next) {
     if (req.body.image) {
       dataCie.companyImage = req.body.image;
     }
-    // console.log("dataCie", dataCie)
+// console.log("dataCie", dataCie)
     await dataCie.save();
     var dataCieFull = await CompanyModel.findOne({ _id: req.params.companyId })
       .populate("labels")
       .populate("offers")
       .exec();
-    // console.log("dataCieFull", dataCieFull)
-    // console.log("dataCie", dataCie);
+// console.log("dataCieFull", dataCieFull)
+// console.log("dataCie", dataCie);
     res.json({ result: true, dataCieFull, offerSaved });
   }
 });
 
 // route affichage labels sur page company blank
 router.get("/labels", async function (req, res, next) {
-  // /route/params?query
   var dataLabels = await labelModel.find();
-  // console.log("dataLabels", dataLabels);
+// console.log("dataLabels", dataLabels);
   res.json({ result: true, dataLabels });
 });
 
 // route suppression labels sur page company filled
 router.put("/labels/:companyId/:labelId", async function (req, res, next) {
-  // /route/params?query
   await CompanyModel.updateOne(
     { _id: req.params.companyId },
     { $pull: { labels: req.params.labelId } }
@@ -256,6 +253,7 @@ router.post("/like", async function (req, res, next) {
     res.json({ result: true, user });
   }
 });
+
 
 
 module.exports = router;
