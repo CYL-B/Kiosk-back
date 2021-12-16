@@ -4,36 +4,26 @@ var router = express.Router();
 var OfferModel = require("../models/offers");
 var QuotationModel = require("../models/quotations")
 
-
-//route test update statut
-
-router.put("/end-quotation", async function(req, res, next){
-
-    var quotationToEnd = await QuotationModel.updateOne({ id: "61ba08c711286bd01c8f78e0" },
-        { status: "done" })
-
-    console.log("quotationToEnd", quotationToEnd)
-
-    res.json({ result: true, quotationToEnd});
-})
-
-//routes pour sendquote
+////// ROUTES POUR SENDQUOTE //////
 router.get("/quotation-info/:token/:reqQuoteId/", async function (req, res, next) {
 
     let token = req.params.token;
     let quoteId = req.params.reqQuoteId
     if (!token) { res.json({ result: false }) } else {
-        // var offer = await OfferModel.findOne({ id: offerId })
-        // console.log("offer", offer);
+        
 
         var quotationFromBack = await QuotationModel.findById({ _id: quoteId })
         var answers = quotationFromBack.answers;
+        var offerId = quotationFromBack.offerId
+
+        var offer = await OfferModel.findOne({id: offerId})
+        // console.log("offer", offer);
 
 
-        console.log("quotation", answers)
+        // console.log("quotation", answers)
 
 
-        res.json({ result: true, quotationFromBack, answers });
+        res.json({ result: true, quotationFromBack, answers, offer });
     }
 });
 
@@ -63,21 +53,20 @@ router.get("/quote-request/:token/:reqOfferId/:companyId", async function (req, 
     if (!token) { res.json({ result: false }) } else {
 
         var offer = await OfferModel.findById(offerId )
-        console.log("offer", offer)
+        
 
         var existingQuotation = await QuotationModel.findOne({
            clientId: clientId,
            offerId: offerId}
         )
-        console.log("quotation", existingQuotation)
+        // console.log("quotation", existingQuotation)
 
         if (existingQuotation) {
             var erreur = "Vous avez déjà demandé un devis pour cette offre. Voulez-vous redemander un devis ?"
             res.json({ result: false, erreur, offer })
         } else {
 
-            console.log("offer", offer)
-
+           
             res.json({ result: true, offer });
         }
     }
@@ -160,3 +149,15 @@ router.get("/find-quotation/:token/:companyId", async function (req, res, next) 
 })
 
 module.exports = router;
+
+//route test update statut
+
+// router.put("/end-quotation", async function(req, res, next){
+
+//     var quotationToEnd = await QuotationModel.updateOne({ id: "61ba08c711286bd01c8f78e0" },
+//         { status: "done" })
+
+//     console.log("quotationToEnd", quotationToEnd)
+
+//     res.json({ result: true, quotationToEnd});
+// })
