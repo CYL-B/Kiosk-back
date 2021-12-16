@@ -10,6 +10,8 @@ var OfferModel = require("../models/offers");
 var UserModel = require("../models/users");
 var CategoryModel = require("../models/categories");
 var ConversationModel = require("../models/conversations");
+var QuotationModel = require("../models/quotations");
+var RatingModel = require("../models/ratings");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -825,6 +827,257 @@ router.get("/seed", async function (req, res, next) {
   });
 
   var usertest = await usertest.save();
+
+  let result = true;
+
+  res.json({ result });
+});
+
+//route pour ajouter à la main une company
+router.get("/newseed", async function (req, res, next) {
+
+  var airbnb = new CompanyModel({
+    siret: "9999999999",
+    companyName: "Airbnb",
+    logo: "https://www.escaet.fr/wp-content/uploads/2019/06/logo-airbnb.png",
+    type: "client",
+    offices: [
+      {
+        address: "56 Bv Pereire",
+        city: "Paris",
+        postalCode: "75001",
+        country: "France",
+        officeName: "Main Office",
+        phone: "0000000009",
+      },
+    ],
+  });
+
+  airbnb = await airbnb.save();
+
+  var userairbnb = new UserModel({
+    type: "client",
+    token: "token2",
+    email: "a",
+    password: "$2b$10$SsxtSvY4bB4Pvr0lb3l9LeOqF1x4QjOKA7IIpK6wfnswEkHbvaTRu",
+    firstName: "Pedro",
+    lastName: "Lopez",
+    phone: "0600000000",
+    role: "Commerciale",
+    avatar:
+      "https://static-cse.canva.com/blob/189288/article_canva_le_guide_pour_creer_de_superbes_photos_de_profil_9-1.jpg",
+    companyId: airbnb._id,
+    favorites: [],
+  });
+
+  userairbnb = await userairbnb.save();
+
+  var shine = new CompanyModel({
+    siret: "9999999999",
+    companyName: "Shine",
+    logo: "https://backoffice.ccistore.fr/uploads/eservice/logo/1566920703749.png",
+    type: "client",
+    offices: [
+      {
+        address: "56 Bv Pereire",
+        city: "Paris",
+        postalCode: "75004",
+        country: "France",
+        officeName: "Main Office",
+        phone: "0000000009",
+      },
+    ],
+  });
+
+  shine = await shine.save();
+
+  var usershine = new UserModel({
+    type: "client",
+    token: "token2",
+    email: "a",
+    password: "$2b$10$SsxtSvY4bB4Pvr0lb3l9LeOqF1x4QjOKA7IIpK6wfnswEkHbvaTRu",
+    firstName: "Albert",
+    lastName: "Martin",
+    phone: "0600000000",
+    role: "Commerciale",
+    avatar:
+      "https://www.missnumerique.com/blog/wp-content/uploads/photo-de-profil-pour-les-reseaux-sociaux-joseph-gonzalez.jpg",
+    companyId: shine._id,
+    favorites: [],
+  });
+
+  usershine = await usershine.save();
+
+  var criteo = new CompanyModel({
+    siret: "9999999999",
+    companyName: "Criteo",
+    logo: "https://media-exp1.licdn.com/dms/image/C4D0BAQFEd7TWx2LR0g/company-logo_200_200/0/1622722445477?e=2159024400&v=beta&t=SYmr_-cc2MoINsRLQmE2CcHF9nggSlLrEYiAngaZ2eQ",
+    type: "client",
+    offices: [
+      {
+        address: "56 Bv Pereire",
+        city: "Paris",
+        postalCode: "75009",
+        country: "France",
+        officeName: "Main Office",
+        phone: "0000000009",
+      },
+    ],
+  });
+
+  criteo = await criteo.save();
+
+  var usercriteo = new UserModel({
+    type: "client",
+    token: "token2",
+    email: "a",
+    password: "$2b$10$SsxtSvY4bB4Pvr0lb3l9LeOqF1x4QjOKA7IIpK6wfnswEkHbvaTRu",
+    firstName: "Cécile",
+    lastName: "Assou",
+    phone: "0600000000",
+    role: "Commerciale",
+    avatar:
+      "https://maphotoportrait.fr/1748-thickbox_default/face-ou-profil-quel-est-le-meilleur-angle-pour-la-photo-linkedin-.jpg",
+    companyId: criteo._id,
+    favorites: [],
+  });
+
+  usercriteo = await usercriteo.save();
+
+  var doctolib = new CompanyModel({
+    siret: "9999999999",
+    companyName: "Doctolib",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Logo_Doctolib.svg/320px-Logo_Doctolib.svg.png",
+    type: "client",
+    offices: [
+      {
+        address: "56 Bv Pereire",
+        city: "Levallois-Peret",
+        postalCode: "92300",
+        country: "France",
+        officeName: "Main Office",
+        phone: "0000000009",
+      },
+    ],
+  });
+
+  doctolib = await doctolib.save();
+
+  var userdoctolib = new UserModel({
+    type: "client",
+    token: "token2",
+    email: "a",
+    password: "$2b$10$SsxtSvY4bB4Pvr0lb3l9LeOqF1x4QjOKA7IIpK6wfnswEkHbvaTRu",
+    firstName: "Idriss",
+    lastName: "Bouzid",
+    phone: "0600000000",
+    role: "Commerciale",
+    avatar:
+      "https://www.lyon-photo.fr/wp-content/uploads/2020/02/photo-profil-viadeo.jpg",
+    companyId: doctolib._id,
+    favorites: [],
+  });
+
+  userdoctolib = await userdoctolib.save();
+
+  var devis1 = new QuotationModel({
+    clientId : "61b72b903ef976a3b8be1b48",
+    providerId: "61b72b8f3ef976a3b8be1b09",
+    status: "requested",
+    offerId: "61b72b8e3ef976a3b8be1b05",
+    dateQuotationRequested : Date.now()
+  });
+
+  devis1 = await devis1.save();
+
+  var devis2 = new QuotationModel({
+    clientId : "61b72b903ef976a3b8be1b48",
+    providerId: "61b72b8f3ef976a3b8be1b12",
+    status: "sent",
+    offerId: "61b72b8f3ef976a3b8be1b0e",
+    dateQuotationRequested : Date.now(),
+    dateQuotationSent : Date.now()
+  });
+
+  devis2 = await devis2.save();
+
+  var devis3 = new QuotationModel({
+    clientId : "61b72b903ef976a3b8be1b48",
+    providerId: "61b72b8f3ef976a3b8be1b1b",
+    status: "accepted",
+    offerId: "61b72b8f3ef976a3b8be1b17",
+    dateQuotationRequested : Date.now(),
+    dateQuotationSent : Date.now(),
+    dateQuotationAccepted : Date.now(),
+  });
+
+  devis3 = await devis3.save();
+
+  var devis4 = new QuotationModel({
+    clientId : "61b72b903ef976a3b8be1b48",
+    providerId: "61b72b8f3ef976a3b8be1b24",
+    status: "done",
+    offerId: "61b72b8f3ef976a3b8be1b20",
+    dateQuotationRequested : Date.now(),
+    dateQuotationSent : Date.now(),
+    dateQuotationAccepted : Date.now(),
+    dateQuotationPaid : Date.now(),
+    dateDone: Date.now()
+  });
+
+  devis4 = await devis4.save();
+
+  let listCie = [ "61b72b8f3ef976a3b8be1b09", "61b72b8f3ef976a3b8be1b12", "61b72b8f3ef976a3b8be1b1b", "61b72b8f3ef976a3b8be1b24", "61b72b8f3ef976a3b8be1b39", "61b72b8f3ef976a3b8be1b3c", "61b72b8f3ef976a3b8be1b3f"];
+
+  for (let i = 0; i < listCie.length; i++) {
+    let rating1 = new RatingModel({
+      title: String,
+      feedback: "Bonne prestation",
+      rating: 4,
+      dateRating: "2019-08-18T22:00:00.000+00:00",
+      clientId: airbnb._id,
+      providerId: listCie[i],
+      userId: userairbnb._id
+    });
+
+    rating1 = await rating1.save();
+
+    let rating2 = new RatingModel({
+      title: String,
+      feedback: "Très bonne prestation",
+      rating: 5,
+      dateRating: "2021-12-14T15:30:02.000+00:00",
+      clientId: shine._id,
+      providerId: listCie[i],
+      userId: usershine._id
+    });
+
+    rating2 = await rating2.save();
+
+    let rating3 = new RatingModel({
+      title: String,
+      feedback: "Équipe très efficace",
+      rating: 5,
+      dateRating: "2021-12-15T16:27:58.000+00:00",
+      clientId: criteo._id,
+      providerId: listCie[i],
+      userId: usercriteo._id
+    });
+
+    rating3 = await rating3.save();
+
+    let rating4 = new RatingModel({
+      title: String,
+      feedback: "Quelque retard, mais malgré tout, l'équipe a été très pro",
+      rating: 3,
+      dateRating: "2020-12-02T23:00:00.000+00:00",
+      clientId: doctolib._id,
+      providerId: listCie[i],
+      userId: userdoctolib._id
+    });
+
+    rating4 = await rating4.save();
+  }
 
   let result = true;
 
