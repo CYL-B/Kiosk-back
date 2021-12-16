@@ -11,25 +11,11 @@ router.get("/getcategories", async function (req, res, next) {
   if (categorieList) {
     res.json({ result: true, categorieList });
   } else {
-    res.json({ result: true });
+    res.json({ result: false });
   }
 });
 
 router.post("/recherchebylistID", async function (req, res, next) {
-  // var listeofferID = req.body.listeofferID;
-
-  // var listeofferID = [
-  //   "61b72b8e3ef976a3b8be1b05",
-  //   "61b72b8f3ef976a3b8be1b0e",
-  //   "61b72b8f3ef976a3b8be1b17",
-  // ];
-
-  // var offerList = await OfferModel.find({
-  //   _id: {
-  //     $in: listeofferID,
-  //   },
-  // });
-
   var recherche = req.body.recherche;
   var regex = new RegExp("\\b" + recherche, "gi");
 
@@ -42,10 +28,6 @@ router.post("/recherchebylistID", async function (req, res, next) {
   });
   var resultats = rechercheOffer.map(({ _id }) => ({ _id }));
 
-  // var resultats = rechercheOffer.map((e) => {
-  //   return { id: e._id };
-  // });
-
   if (rechercheOffer) {
     res.json({ result: true, resultats });
   } else {
@@ -55,27 +37,9 @@ router.post("/recherchebylistID", async function (req, res, next) {
 
 //Recherche en selectionant catégorie puis subcategorie
 router.post("/recherche", async function (req, res, next) {
-  // var subcategorieId = req.body.subcategorieId;
-  // var categorieId = req.body.categorieId;
-
-  // var offerList;
-
-  // //recherche liste offres avec subcategorieId ou categorieId, Si aucun des deux recherche offre avec listOfferId
-  // if (subcategorieId === categorieId) {
-  //   offerList = await OfferModel.find({ categoriyId: categorieId });
-  // } else if (listOfferId) {
-  //   offerList = await OfferModel.find({
-  //     _id: {
-  //       $in: listOfferId,
-  //     },
-  //   });
-  // } else {
-  //   offerList = await OfferModel.find({ subCategoriyId: subcategorieId });
-  // }
-
   var listOfferId = req.body.listOfferId;
   listOfferId = JSON.parse(listOfferId);
-  //console.log("listOfferId", listOfferId);
+  console.log("listOfferId", listOfferId);
 
   //recherche avec list de listOfferId
   offerList = await OfferModel.find({
@@ -94,7 +58,7 @@ router.post("/recherche", async function (req, res, next) {
   }
 
   //renvoie de la liste offres + companyData
-  if (offerList) {
+  if (offerList.length !== 0) {
     res.json({ result: true, offerList });
   } else {
     res.json({ result: false });
@@ -107,8 +71,7 @@ router.post("/rechercheListOffer", async function (req, res, next) {
   var regex = new RegExp("\\b" + recherche, "gi");
   var listOfferID;
 
-  //recherche par souscategories ou  gaterories en commenté
-
+  //recherche par categories
   var rechercheCategorie = await CategoryModel.findOne({
     categoryName: recherche,
   });
@@ -127,18 +90,15 @@ router.post("/rechercheListOffer", async function (req, res, next) {
       "subCategories.subCategoryName": regex,
     });
 
-    //console.log("rechercheSousCategorie", rechercheSousCategorie);
-
-    //si résultat de la recherche par sous categorie
+    //si le résultat de la recherche par categorie ne donne rien, on cherche dans les sous categories
     if (rechercheSousCategorie) {
-      //on extra
       var resultmapage = rechercheSousCategorie.subCategories.find(
         (e) =>
           e.subCategoryName.toLowerCase().includes(recherche.toLowerCase()) ===
           true
       );
 
-      console.log("resultmapage._id", resultmapage._id);
+      // console.log("resultmapage._id", resultmapage._id);
       listOfferID = await OfferModel.find(
         {
           subCategoriyId: resultmapage._id,
@@ -148,7 +108,7 @@ router.post("/rechercheListOffer", async function (req, res, next) {
       listOfferID = listOfferID.map((e) => e._id);
     }
 
-    //si pas de résultat de la recherche par sous categorie, on cherche dans offer
+    //si résultat de la recherche par sous categorie ne donne rien, on cherche dans les offres
     else {
       listOfferID = await OfferModel.find(
         {
@@ -209,8 +169,11 @@ router.get("/getPacks", async function (req, res, next) {
 });
 
 router.get("/getPacks/:packId", async function (req, res, next) {
-  var packOffers = await packModel.findById(req.params.packId).populate("offers").exec();
-// console.log("packOffers", packOffers);
+  var packOffers = await packModel
+    .findById(req.params.packId)
+    .populate("offers")
+    .exec();
+  // console.log("packOffers", packOffers);
   if (packOffers) {
     res.json({ result: true, packOffers });
   } else {
