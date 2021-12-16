@@ -11,6 +11,7 @@ var fs = require("fs");
 
 var cloudinary = require("cloudinary").v2;
 const { stringify } = require("querystring");
+const userModel = require("../models/users");
 
 cloudinary.config({
   cloud_name: "djlnzwuj2",
@@ -117,6 +118,18 @@ router.put("/updateuserdata", async function (req, res, next) {
     var userData = await UserModel.findOne({ token: token });
     console.log(userData);
     res.json({ result: true, userData });
+  } else {
+    res.json({ result: false });
+  }
+});
+
+router.post("/getUserData", async function (req, res, next) {
+  var token = req.body.token;
+  console.log("token", token);
+
+  var user = await userModel.findOne({ token: token });
+  if (user) {
+    res.json({ result: true, user });
   } else {
     res.json({ result: false });
   }
