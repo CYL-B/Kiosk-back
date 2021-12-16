@@ -62,12 +62,12 @@ router.get("/quote-request/:token/:reqOfferId/:companyId", async function (req, 
 
     if (!token) { res.json({ result: false }) } else {
 
-        var offer = await OfferModel.findOne({ _id: offerId })
+        var offer = await OfferModel.findById(offerId )
         console.log("offer", offer)
 
         var existingQuotation = await QuotationModel.findOne({
-            offerId: offerId},
-           {clientId: clientId}
+           clientId: clientId,
+           offerId: offerId}
         )
         console.log("quotation", existingQuotation)
 
