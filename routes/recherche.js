@@ -15,7 +15,7 @@ router.get("/getcategories", async function (req, res, next) {
 });
 
 router.post("/recherchebylistID", async function (req, res, next) {
-  var listeofferID = req.body.listeofferID;
+  // var listeofferID = req.body.listeofferID;
 
   // var listeofferID = [
   //   "61b72b8e3ef976a3b8be1b05",
@@ -54,34 +54,36 @@ router.post("/recherchebylistID", async function (req, res, next) {
 
 //Recherche en selectionant catégorie puis subcategorie
 router.post("/recherche", async function (req, res, next) {
-  var subcategorieId = req.body.subcategorieId;
-  var categorieId = req.body.categorieId;
+  // var subcategorieId = req.body.subcategorieId;
+  // var categorieId = req.body.categorieId;
+
+  // var offerList;
+
+  // //recherche liste offres avec subcategorieId ou categorieId, Si aucun des deux recherche offre avec listOfferId
+  // if (subcategorieId === categorieId) {
+  //   offerList = await OfferModel.find({ categoriyId: categorieId });
+  // } else if (listOfferId) {
+  //   offerList = await OfferModel.find({
+  //     _id: {
+  //       $in: listOfferId,
+  //     },
+  //   });
+  // } else {
+  //   offerList = await OfferModel.find({ subCategoriyId: subcategorieId });
+  // }
 
   var listOfferId = req.body.listOfferId;
-
-  var offerList;
-
-  //recherche liste offres avec subcategorieId ou categorieId, Si aucun des deux recherche offre avec listOfferId
-  if (subcategorieId === categorieId) {
-    offerList = await OfferModel.find({ categoriyId: categorieId });
-  } else if (listOfferId) {
-    offerList = await OfferModel.find({
-      _id: {
-        $in: listOfferId,
-      },
-    });
-  } else {
-    offerList = await OfferModel.find({ subCategoriyId: subcategorieId });
-  }
+  listOfferId = JSON.parse(listOfferId);
+  //console.log("listOfferId", listOfferId);
 
   //recherche avec list de listOfferId
-  // offerList = await OfferModel.find({
-  //   _id: {
-  //     $in: listOfferId,
-  //   },
-  // });
+  offerList = await OfferModel.find({
+    _id: {
+      $in: listOfferId,
+    },
+  });
 
-  //ajout de compagnie data a chaque offre
+  //ajout de compagniedata a chaque offre
   for (let i = 0; i < offerList.length; i++) {
     var companyData = await companyModel.find({
       offers: offerList[i]._id,
@@ -99,39 +101,71 @@ router.post("/recherche", async function (req, res, next) {
 });
 
 // route pour chercher via la bar de recherche
-router.post("/rechercheparlabar", async function (req, res, next) {
+router.post("/rechercheListOffer", async function (req, res, next) {
   var recherche = req.body.recherche;
   var regex = new RegExp("\\b" + recherche, "gi");
+  var listOfferID;
 
   //recherche par souscategories ou  gaterories en commenté
-  var rechercheSousCategorie = await CategoryModel.findOne(
-    //{
-    //$or: [{ categoryName: regex },
-    { "subCategories.subCategoryName": regex } //],
-    //}
-  );
-  var sousCategorie;
-  if (rechercheSousCategorie) {
-    var resultmapage = rechercheSousCategorie.subCategories.find(
-      (e) => e.subCategoryName.includes(recherche) === true
+
+  var rechercheCategorie = await CategoryModel.findOne({
+    categoryName: recherche,
+  });
+
+  if (rechercheCategorie) {
+    listOfferID = await OfferModel.find(
+      {
+        categoriyId: rechercheCategorie._id,
+      },
+      { _id: 1 }
     );
 
-    sousCategorie = { _id: resultmapage._id };
-
-    console.log("sousCategorie", sousCategorie);
+    listOfferID = listOfferID.map((e) => e._id);
   } else {
-    sousCategorie = await OfferModel.find({
-      $or: [
-        { offerName: regex },
-        { description: regex },
-        { shortDescription: regex },
-      ],
+    var rechercheSousCategorie = await CategoryModel.findOne({
+      "subCategories.subCategoryName": regex,
     });
 
-    sousCategorie = sousCategorie.map(({ _id }) => ({ _id }));
+    //console.log("rechercheSousCategorie", rechercheSousCategorie);
+
+    //si résultat de la recherche par sous categorie
+    if (rechercheSousCategorie) {
+      //on extra
+      var resultmapage = rechercheSousCategorie.subCategories.find(
+        (e) =>
+          e.subCategoryName.toLowerCase().includes(recherche.toLowerCase()) ===
+          true
+      );
+
+      console.log("resultmapage._id", resultmapage._id);
+      listOfferID = await OfferModel.find(
+        {
+          subCategoriyId: resultmapage._id,
+        },
+        { _id: 1 }
+      );
+      listOfferID = listOfferID.map((e) => e._id);
+    }
+
+    //si pas de résultat de la recherche par sous categorie, on cherche dans offer
+    else {
+      listOfferID = await OfferModel.find(
+        {
+          $or: [
+            { offerName: regex },
+            { description: regex },
+            { shortDescription: regex },
+          ],
+        },
+        { _id: 1 }
+      );
+
+      listOfferID = listOfferID.map((e) => e._id);
+    }
   }
 
   //OK fonctionne
+  //recherche dans compagnie
   // var rechercherCompanies = await companyModel.find({
   //   $or: [
   //     { companyName: regex },
@@ -139,9 +173,10 @@ router.post("/rechercheparlabar", async function (req, res, next) {
   //     { shortDescription: regex },
   //   ],
   // });
+  //
 
-  if (sousCategorie) {
-    res.json({ result: true, sousCategorie });
+  if (listOfferID) {
+    res.json({ result: true, listOfferID });
   } else {
     res.json({ result: false });
   }
