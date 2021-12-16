@@ -18,23 +18,23 @@ var cloudinary = require("cloudinary").v2;
 router.get("/all/:token", async function (req, res, next) {
   // /route/params?query
   let token = req.params.token;
-  // console.log("companyiD", req.params.token, req.params.companyId);
+// console.log("companyiD", req.params.token, req.params.companyId);
   if (!token) {
     res.json({ result: false });
   } else {
     var companies = await CompanyModel.find({type: "partner"}, {_id: 1});
     var companies = companies.map(company => company._id);
-    //console.log("company", company.labels);
-    //console.log("company", company);
+//console.log("company", company.labels);
+//console.log("company", company);
     res.json({ result: true, companies });
   }
 });
 
 // route affichage infos inscription entreprise
 router.get("/:companyId/:token", async function (req, res, next) {
-  // /route/params?query
+
   let token = req.params.token;
-  // console.log("companyiD", req.params.token, req.params.companyId);
+// console.log("companyiD", req.params.token, req.params.companyId);
   if (!token) {
     res.json({ result: false });
   } else {
@@ -46,8 +46,8 @@ router.get("/:companyId/:token", async function (req, res, next) {
     var ratings = await RatingModel.find({ providerId: req.params.companyId })
       .populate("clientId")
       .exec();
-    //console.log("company", company.labels);
-    //console.log("company", company);
+//console.log("company", company.labels);
+//console.log("company", company);
     res.json({ result: true, company, ratings });
   }
 });
@@ -61,7 +61,7 @@ router.post("/", async function (req, res, next) {
       companyName: req.body.companyName,
     });
     if (!company) {
-      //console.log(req.body);
+//console.log(req.body);
       let newCompany = new CompanyModel({
         companyName: req.body.companyName,
         address: req.body.address ? req.body.address : "",
@@ -80,21 +80,20 @@ router.post("/", async function (req, res, next) {
 router.get("/labels", async function (req, res, next) {
   // /route/params?query
   var dataLabels = await labelModel.find();
-  //console.log("dataLabels", dataLabels);
+//console.log("dataLabels", dataLabels);
   res.json({ result: true, dataLabels });
 });
 
 // route rajout infos + labels page entreprise
 router.put("/:companyId", async function (req, res, next) {
-  let token = req.body.token;
 
+  let token = req.body.token;
   if (!token) {
     res.json({ result: false });
   } else {
     var dataCie = await CompanyModel.findOne({ _id: req.params.companyId }); // recupération data company de DB par ID
-    // console.log("dataCie", dataCie)
+// console.log("dataCie", dataCie)
     if (req.body.labelId) {
-      //////////////
       const labelFound = dataCie.labels.filter(
         (label) => label._id == req.body.labelId
       ); // on check si le label a deja ete ajouté
@@ -119,29 +118,27 @@ router.put("/:companyId", async function (req, res, next) {
     if (req.body.image) {
       dataCie.companyImage = req.body.image;
     }
-    // console.log("dataCie", dataCie)
+// console.log("dataCie", dataCie)
     await dataCie.save();
     var dataCieFull = await CompanyModel.findOne({ _id: req.params.companyId })
       .populate("labels")
       .populate("offers")
       .exec();
-    // console.log("dataCieFull", dataCieFull)
-    // console.log("dataCie", dataCie);
+// console.log("dataCieFull", dataCieFull)
+// console.log("dataCie", dataCie);
     res.json({ result: true, dataCieFull, offerSaved });
   }
 });
 
 // route affichage labels sur page company blank
 router.get("/labels", async function (req, res, next) {
-  // /route/params?query
   var dataLabels = await labelModel.find();
-  // console.log("dataLabels", dataLabels);
+// console.log("dataLabels", dataLabels);
   res.json({ result: true, dataLabels });
 });
 
 // route suppression labels sur page company filled
 router.put("/labels/:companyId/:labelId", async function (req, res, next) {
-  // /route/params?query
   await CompanyModel.updateOne(
     { _id: req.params.companyId },
     { $pull: { labels: req.params.labelId } }
@@ -185,28 +182,24 @@ router.get("/profile/:token/:companyId", async function (req, res, next){
   if (!token) {
     res.json({ result: false });}else{
 
-
   var company = await CompanyModel.findById(companyId)
-console.log("company", company)
+// console.log("company", company)
 
 var siret = company.siret
 var companyName = company.companyName
 var logo = company.logo
-console.log("logo", companyName)
+// console.log("logo", companyName)
 
   res.json({ result: true, siret, companyName,logo});}
-
 })
 
 router.post("/logo", async function(req, res, next){
-
-  console.log(req.files);
   var imagePath = "./tmp/" + uniqid() + ".jpg";
   var resultCopy = await req.files.logo.mv(imagePath);
 
   if (!resultCopy) {
     var resultCloudinary = await cloudinary.uploader.upload(imagePath);
-    console.log(resultCloudinary);
+// console.log(resultCloudinary);
     if (resultCloudinary.url) {
       fs.unlinkSync(imagePath);
       res.json({
@@ -219,32 +212,31 @@ router.post("/logo", async function(req, res, next){
     res.json({ result: false, message: resultCopy });
   }
 
-
   res.json({ result: true, siret, companyName})
 })
 
 
 router.put("/update-company", async function (req, res, next){
-
   var token = req.body.token;
-  
+
   if (!token) {
-    res.json({ result: false });}else{
-
-  var updateCompany = await CompanyModel.updateOne({_id: req.body.companyId},{
-    companyName : req.body.companyName,
-    logo: req.body.logo,
-    siret : req.body.siret
-  }
-
-  );
+    res.json({ result: false });
+  } else {
+    var updateCompany = await CompanyModel.updateOne({_id: req.body.companyId},{
+      companyName : req.body.companyName,
+      logo: req.body.logo,
+      siret : req.body.siret
+    }
+    );
 
   if (updateCompany) {
     var companyData = await CompanyModel.findOne({ id: req.body.companyId });
-    console.log(companyData);
+// console.log(companyData);
     res.json({ result: true, companyData });
   } else {
     res.json({ result: false });
   }}
-})
+
+});
+
 module.exports = router;

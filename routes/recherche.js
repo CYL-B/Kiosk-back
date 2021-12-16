@@ -98,7 +98,7 @@ router.post("/rechercheListOffer", async function (req, res, next) {
           true
       );
 
-      console.log("resultmapage._id", resultmapage._id);
+      // console.log("resultmapage._id", resultmapage._id);
       listOfferID = await OfferModel.find(
         {
           subCategoriyId: resultmapage._id,

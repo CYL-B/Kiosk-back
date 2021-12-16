@@ -33,7 +33,7 @@ router.post("/", async function (req, res, next) {
     if (!req.body.offerName) {
       res.json({ result: false, message: "offer info missing" });
     } else {
-      console.log(req.body);
+// console.log(req.body);
       let newOffer = new OfferModel({
         offerName: req.body.offerName,
       });

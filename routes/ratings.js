@@ -27,18 +27,17 @@ router.post("/:token", async function (req, res, next) {
         res.json({ result: false });
     } else {
         let newRating = new ratingModel({
-        feedback: req.body.feedback,
-        rating: req.body.rating,
-        dateRating: req.body.dateRating,
-        clientId: req.body.clientId,
-        providerId: req.body.providerId,
-        userId: req.body.userId
+            feedback: req.body.feedback,
+            rating: req.body.rating,
+            dateRating: req.body.dateRating,
+            clientId: req.body.clientId,
+            providerId: req.body.providerId,
+            userId: req.body.userId
     })
     let newRatingSaved = await newRating.save();
-console.log("newRatingSaved", newRatingSaved);
+// console.log("newRatingSaved", newRatingSaved);
     res.json({ result: true, newRatingSaved });
     }
 });
-
 
 module.exports = router;
