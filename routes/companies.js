@@ -209,7 +209,7 @@ router.put("/update-company", async function (req, res, next){
   if (!token) {
     res.json({ result: false });}else{
 
-  var updateCompany = await CompanyModel.updateOne({_id: "61b9bf541fd7c01b559ebf64"},{
+  var updateCompany = await CompanyModel.updateOne({_id: req.body.companyId},{
     companyName : req.body.companyName,
     logo: req.body.logo,
     siret : req.body.siret
