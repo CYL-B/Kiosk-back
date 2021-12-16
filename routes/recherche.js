@@ -4,6 +4,7 @@ var router = express.Router();
 var companyModel = require("../models/companies");
 var CategoryModel = require("../models/categories");
 var OfferModel = require("../models/offers");
+var packModel = require("../models/packs");
 
 router.get("/getcategories", async function (req, res, next) {
   var categorieList = await CategoryModel.find();
@@ -118,7 +119,7 @@ router.post("/rechercheparlabar", async function (req, res, next) {
 
     sousCategorie = { _id: resultmapage._id };
 
-    console.log("sousCategorie", sousCategorie);
+// console.log("sousCategorie", sousCategorie);
   } else {
     sousCategorie = await OfferModel.find({
       $or: [
@@ -161,6 +162,25 @@ router.get("/getsubcategories", async function (req, res, next) {
     res.json({ result: true });
   }
   res.json({ result: true });
+});
+
+router.get("/getPacks", async function (req, res, next) {
+  var dataPack = await packModel.find();
+  if (dataPack) {
+    res.json({ result: true, dataPack });
+  } else {
+    res.json({ result: true });
+  }
+});
+
+router.get("/getPacks/:packId", async function (req, res, next) {
+  var packOffers = await packModel.findById(req.params.packId).populate("offers").exec();
+// console.log("packOffers", packOffers);
+  if (packOffers) {
+    res.json({ result: true, packOffers });
+  } else {
+    res.json({ result: true });
+  }
 });
 
 module.exports = router;

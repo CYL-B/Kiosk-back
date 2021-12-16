@@ -12,6 +12,7 @@ var CategoryModel = require("../models/categories");
 var ConversationModel = require("../models/conversations");
 var QuotationModel = require("../models/quotations");
 var RatingModel = require("../models/ratings");
+var packModel = require("../models/packs");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {

@@ -9,21 +9,16 @@ var UserModel = require("../models/users");
 // route affichage infos offres
 router.get("/:offerId/:token", async function (req, res, next) {
   let token = req.params.token;
-
-  console.log("route offers");
-
+// console.log("route offers");
   if (!token) {
     res.json({ result: false });
   } else {
     var offer = await OfferModel.findById(req.params.offerId);
-    console.log("offer", offer);
+// console.log("req.params.offerId", req.params.offerId);
     var company = await CompanyModel.findOne({
       offers: offer._id,
     });
-    console.log("company", company);
-    // Récupération dinfos offres entreprise :
-    // FROM FRONT : offerID
-    // FROM DB TO FRONT dans {offers} : toutes les offres grâce au offerID (populate)
+// console.log("company", company);
     res.json({ result: true, offer, company });
   }
 });
