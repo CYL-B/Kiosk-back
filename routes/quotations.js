@@ -125,6 +125,7 @@ router.get("/find-quotation/:token/:companyId", async function (req, res, next) 
                 id: quotations[i].id,
                 logo: provider.logo,
                 name: provider.companyName,
+                providerId: provider._id,
                 offer: offer.offerName,
                 status: quotations[i].status
 
