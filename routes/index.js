@@ -66,7 +66,7 @@ router.post("/image", async function (req, res, next) {
 
   if (!resultCopy) {
     var resultCloudinary = await cloudinary.uploader.upload(imagePath); // upload + renvoie url cloudinary
-// console.log(resultCloudinary);
+    // console.log(resultCloudinary);
     if (resultCloudinary.url) {
       fs.unlinkSync(imagePath);
       res.json({
@@ -835,7 +835,6 @@ router.get("/seed", async function (req, res, next) {
 
 //route pour ajouter à la main une company
 router.get("/newseed", async function (req, res, next) {
-
   var airbnb = new CompanyModel({
     siret: "9999999999",
     companyName: "Airbnb",
@@ -981,53 +980,61 @@ router.get("/newseed", async function (req, res, next) {
   userdoctolib = await userdoctolib.save();
 
   var devis1 = new QuotationModel({
-    clientId : "61b72b903ef976a3b8be1b48",
+    clientId: "61b72b903ef976a3b8be1b48",
     providerId: "61b72b8f3ef976a3b8be1b09",
     status: "requested",
     offerId: "61b72b8e3ef976a3b8be1b05",
-    dateQuotationRequested : Date.now()
+    dateQuotationRequested: Date.now(),
   });
 
   devis1 = await devis1.save();
 
   var devis2 = new QuotationModel({
-    clientId : "61b72b903ef976a3b8be1b48",
+    clientId: "61b72b903ef976a3b8be1b48",
     providerId: "61b72b8f3ef976a3b8be1b12",
     status: "sent",
     offerId: "61b72b8f3ef976a3b8be1b0e",
-    dateQuotationRequested : Date.now(),
-    dateQuotationSent : Date.now()
+    dateQuotationRequested: Date.now(),
+    dateQuotationSent: Date.now(),
   });
 
   devis2 = await devis2.save();
 
   var devis3 = new QuotationModel({
-    clientId : "61b72b903ef976a3b8be1b48",
+    clientId: "61b72b903ef976a3b8be1b48",
     providerId: "61b72b8f3ef976a3b8be1b1b",
     status: "accepted",
     offerId: "61b72b8f3ef976a3b8be1b17",
-    dateQuotationRequested : Date.now(),
-    dateQuotationSent : Date.now(),
-    dateQuotationAccepted : Date.now(),
+    dateQuotationRequested: Date.now(),
+    dateQuotationSent: Date.now(),
+    dateQuotationAccepted: Date.now(),
   });
 
   devis3 = await devis3.save();
 
   var devis4 = new QuotationModel({
-    clientId : "61b72b903ef976a3b8be1b48",
+    clientId: "61b72b903ef976a3b8be1b48",
     providerId: "61b72b8f3ef976a3b8be1b24",
     status: "done",
     offerId: "61b72b8f3ef976a3b8be1b20",
-    dateQuotationRequested : Date.now(),
-    dateQuotationSent : Date.now(),
-    dateQuotationAccepted : Date.now(),
-    dateQuotationPaid : Date.now(),
-    dateDone: Date.now()
+    dateQuotationRequested: Date.now(),
+    dateQuotationSent: Date.now(),
+    dateQuotationAccepted: Date.now(),
+    dateQuotationPaid: Date.now(),
+    dateDone: Date.now(),
   });
 
   devis4 = await devis4.save();
 
-  let listCie = [ "61b72b8f3ef976a3b8be1b09", "61b72b8f3ef976a3b8be1b12", "61b72b8f3ef976a3b8be1b1b", "61b72b8f3ef976a3b8be1b24", "61b72b8f3ef976a3b8be1b39", "61b72b8f3ef976a3b8be1b3c", "61b72b8f3ef976a3b8be1b3f"];
+  let listCie = [
+    "61b72b8f3ef976a3b8be1b09",
+    "61b72b8f3ef976a3b8be1b12",
+    "61b72b8f3ef976a3b8be1b1b",
+    "61b72b8f3ef976a3b8be1b24",
+    "61b72b8f3ef976a3b8be1b39",
+    "61b72b8f3ef976a3b8be1b3c",
+    "61b72b8f3ef976a3b8be1b3f",
+  ];
 
   for (let i = 0; i < listCie.length; i++) {
     let rating1 = new RatingModel({
@@ -1037,7 +1044,7 @@ router.get("/newseed", async function (req, res, next) {
       dateRating: "2019-08-18T22:00:00.000+00:00",
       clientId: airbnb._id,
       providerId: listCie[i],
-      userId: userairbnb._id
+      userId: userairbnb._id,
     });
 
     rating1 = await rating1.save();
@@ -1049,7 +1056,7 @@ router.get("/newseed", async function (req, res, next) {
       dateRating: "2021-12-14T15:30:02.000+00:00",
       clientId: shine._id,
       providerId: listCie[i],
-      userId: usershine._id
+      userId: usershine._id,
     });
 
     rating2 = await rating2.save();
@@ -1061,7 +1068,7 @@ router.get("/newseed", async function (req, res, next) {
       dateRating: "2021-12-15T16:27:58.000+00:00",
       clientId: criteo._id,
       providerId: listCie[i],
-      userId: usercriteo._id
+      userId: usercriteo._id,
     });
 
     rating3 = await rating3.save();
@@ -1073,7 +1080,7 @@ router.get("/newseed", async function (req, res, next) {
       dateRating: "2020-12-02T23:00:00.000+00:00",
       clientId: doctolib._id,
       providerId: listCie[i],
-      userId: userdoctolib._id
+      userId: userdoctolib._id,
     });
 
     rating4 = await rating4.save();
@@ -1082,19 +1089,6 @@ router.get("/newseed", async function (req, res, next) {
   let result = true;
 
   res.json({ result });
-});
-
-router.post("/rechercheparlabar", async function (req, res, next) {
-  var recherche = req.body.recherche;
-
-  var rechercheOffer = await OfferModel.find({
-    $or: [
-      { offerName: recherche },
-      { description: recherche },
-      { description: shortDescription },
-      { description: shortDescription },
-    ],
-  });
 });
 
 module.exports = router;
