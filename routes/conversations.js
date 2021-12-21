@@ -5,18 +5,16 @@ var CompanyModel = require("../models/companies");
 var UserModel = require("../models/users");
 
 ////// ROUTES MESSAGES SCREEN //////
-
+//route pour créer une conversation à partir de "contacter"
 router.post("/new", async function (req, res, next) {
-  //avant de créer une nouvelle conversation, il faut vérifier au préalable qu'il en existe pas déjà une entre les deux interlocuteurs :
 
-  //si une conversation existe, il faut rediriger vers la page correspondante grâce à l'id de la conversation récupéré dans le back et à renvoyer au front if (conversation){res.redirect({})}
-  //sinon, on créé une nouvelle conv
 
+  //avant de créer une nouvelle conversation, il faut vérifier au préalable s'il en existe déjà une entre les deux interlocuteurs :
   var conversation = await conversationModel.findOne({
     senderID: req.body.senderId,
     receiverID: req.body.receiverId,
   });
-
+  //si une conversation n'existe pas déjà, on en créé une nouvelle 
   if (!conversation) {
     conversation = new conversationModel({
       senderID: req.body.senderId,
@@ -24,12 +22,12 @@ router.post("/new", async function (req, res, next) {
     });
     conversation = await conversation.save();
   }
-
+//sinon, il faut renvoyer la conversation trouvée au front
   res.json({ result: true, conversation });
 });
 
 
-//route qui affiche les conversations
+//route qui affiche les conversations dans la page messagesscreen
 
 router.get("/:companyId/:userType/:token", async function (req, res, next) {
   
@@ -38,7 +36,7 @@ router.get("/:companyId/:userType/:token", async function (req, res, next) {
   if (!token) {
       res.json({ result: false });
   } else {
-
+//fonction pour formater la date
   const dateFormat = function (date) {
     var newDate = new Date(date);
     var format =
@@ -49,11 +47,14 @@ router.get("/:companyId/:userType/:token", async function (req, res, next) {
       newDate.getFullYear();
     return format;
   };
-  //récupérer l'id de l'entreprise à laquelle le user appartient
+  //on récupère l'id de l'entreprise à laquelle le user appartient car on affiche les conversations de cette entreprise
   var companyId = req.params.companyId;
-  //récupérer l'entreprise à laquelle le user appartient
+
+  //on récupére l'entreprise à laquelle le user appartient à partir de l'id
   var senderCompany = await CompanyModel.findById(companyId);
-  //récupérer les conversations de l'entreprise (elle correspond au sender dans la collection "conversations")
+
+
+  //on peut récupérer les conversations selon le statut de l'utilisateur. Si c'est un client alors il correspond au sender. Sinon, c'est le destinataire
   var conversations;
   if (req.params.userType == "client") {
     conversations = await conversationModel.find({ senderID: companyId });
@@ -64,6 +65,7 @@ router.get("/:companyId/:userType/:token", async function (req, res, next) {
   let conversationsToDisplay = [];
 
   for (var i = 0; i < conversations.length; i++) {
+    //dans le front, on veut afficher les informations de l'interlocuteur pour chaque conv. Pour cela, il faut d'abord récupérer l'interlocuteur, selon le statut du user actuel. S'il s'agit d'un client alors l'interlocuteur sera forcément "receiver" puisque seul le client peut initier une conversation. Sinon, l'interlocuteur sera le sender .
     var company;
     if (req.params.userType == "client") {
       company = await CompanyModel.findById(conversations[i].receiverID);
@@ -72,9 +74,9 @@ router.get("/:companyId/:userType/:token", async function (req, res, next) {
     }
     conversationsToDisplay.push({
       id: conversations[i].id,
-      logo: company.logo ? company.logo : "",
+      logo: company.logo ? company.logo : "",//ternaire, s'il n'y a pas de logo alors logo:""
       message:
-        conversations[i].messages[conversations[i].messages.length - 1].message,
+        conversations[i].messages[conversations[i].messages.length - 1].message,//on récupère le dernier message du tableau "messages", conversations[i].messages sert à récupérer tous les messages et [conversations[i].messages.length - 1] correspond à la position du message à récupérer
       date: conversations[i].messages[conversations[i].messages.length - 1]
         .dateMessageSent
         ? dateFormat(
@@ -100,19 +102,20 @@ router.get("/messages/:convId/:userId/:token", async function (req, res, next) {
         res.json({ result: false });
       } else {
 
-  // on récupère la conversation concernée grâce à son Id : ne pas oublier de renvoyer le :conversationsID depuis le front
+  // on récupère la conversation concernée grâce à son Id, cet Id est envoyé au click sur la conversation dans messages screen(voir onPress)
 
   var conversation = await conversationModel.findById(req.params.convId);
 
   //on cherche les messages à afficher
   var messagesToShow = conversation.messages;
 
-  //on va chercher les informations des messages à afficher dans le front
+  //on va chercher les informations des messages à afficher dans le front, reconstitués pour correspondre à la structure d'un message définie par gifted chat
   
   var messages = [];
   for (var i = 0; i < messagesToShow.length; i++) {
+    //on boucle sur les messages pour récupérer le userId du propriétaire de chaque message
     var user = await UserModel.findById(messagesToShow[i].userId);
-
+//userInfo correspond à la structure du message dans gifted chat. L'_id permet d'identifier qui a envoyé le message. La condition vérifie que si l'userId envoyé du front correspond au userId du message alors son id : 1, sinon, on renvoie le userId du front ce qui implique que ce message n'a pas été envoyé par l'user. 
     let userInfo = {
       _id:
         messagesToShow[i].userId == req.params.userId
@@ -129,7 +132,7 @@ router.get("/messages/:convId/:userId/:token", async function (req, res, next) {
     });
   }
 
-  //ranger les messages en affichant le plus récent en bas de la page
+  //range les messages en affichant le plus récent en bas de la page
 
   var sortedMessages = messages
     .slice()
@@ -140,7 +143,7 @@ router.get("/messages/:convId/:userId/:token", async function (req, res, next) {
   
 });
 
-// route envoi message dans la conversation + convId + userId
+// route envoi message dans la conversation
 router.post("/messages", async function (req, res, next) {
   
   let token = req.body.token;
@@ -148,7 +151,7 @@ router.post("/messages", async function (req, res, next) {
   if (!token) {
       res.json({ result: false });
   } else {
-
+//récupère la conversation dans laquelle on veut ajouter un message
   var conversation = await conversationModel.findOneAndUpdate(
     { _id: req.body.convId },
     {
@@ -164,7 +167,7 @@ router.post("/messages", async function (req, res, next) {
   );
 
 
-  //comment retrouver le message créé et lui assigner la structure exacte qu'on a dans le front
+  //code permettant de retrouver le message créé et lui assigner la structure exacte qu'on a dans le front
   var conversationToFind = await conversationModel.findById(req.body.convId);
   var messageToFind =
     conversationToFind.messages[conversationToFind.messages.length - 1];
@@ -190,24 +193,3 @@ router.post("/messages", async function (req, res, next) {
 
 module.exports = router;
 
-
-
-// route test création conversations
-// router.post("/new-conversation", async function (req, res, next) {
- 
-//   var newConversation = new conversationModel({
-//     senderID: "61ae3cbd7f3164baaccf2c6a",
-//     receiverID: "61ae3d26c4c0d34ec5313d34",
-//     messages: [
-//       {
-//         message: "hey I'm trying",
-//         userId: "61af372581dee32b2aedcb55",
-//         dateMessageSent: new Date(),
-//       },
-//     ],
-//   });
-
-//   var conversationSaved = await newConversation.save();
-
-//   res.json({ result: true, conversationSaved });
-// });

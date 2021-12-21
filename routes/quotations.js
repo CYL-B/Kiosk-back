@@ -5,6 +5,7 @@ var OfferModel = require("../models/offers");
 var QuotationModel = require("../models/quotations")
 
 ////// ROUTES POUR SENDQUOTE //////
+//route qui permet de trouver les informations d'un devis et d'une offre
 router.get("/quotation-info/:token/:reqQuoteId/", async function (req, res, next) {
 
     let token = req.params.token;
@@ -17,16 +18,12 @@ router.get("/quotation-info/:token/:reqQuoteId/", async function (req, res, next
         var offerId = quotationFromBack.offerId
 
         var offer = await OfferModel.findOne({id: offerId})
-        // console.log("offer", offer);
-
-
-        // console.log("quotation", answers)
 
 
         res.json({ result: true, quotationFromBack, answers, offer });
     }
 });
-
+//route qui s'actionne lorsqu'on envoie un devis
 router.put("/send-quotation", async function (req, res, next) {
 
     var token = req.body.token;
@@ -38,12 +35,12 @@ router.put("/send-quotation", async function (req, res, next) {
             dateQuotationAccepted:req.body.date
          })
 
-        console.log("status", quotationToSend)
+        
         res.json({ result: true, quotationToSend });
     }
 });
 
-//routes pour demandes de devis
+//routes pour les demandes de devis
 router.get("/quote-request/:token/:reqOfferId/:companyId", async function (req, res, next) {
 
     let token = req.params.token;
@@ -59,8 +56,8 @@ router.get("/quote-request/:token/:reqOfferId/:companyId", async function (req, 
            clientId: clientId,
            offerId: offerId}
         )
-        // console.log("quotation", existingQuotation)
-
+        
+//vérifie qu'il n'existe pas déjà une demande de devis pour le même client et la même offre
         if (existingQuotation) {
             var erreur = "Vous avez déjà demandé un devis pour cette offre. Voulez-vous redemander un devis ?"
             res.json({ result: false, erreur, offer })
@@ -99,6 +96,9 @@ router.post("/add-quotation", async function (req, res, next) {
 
 });
 
+////// ROUTES POUR QUOTATIONS //////
+
+//route qui permet de trouver les devis et demandes de devis
 router.get("/find-quotation/:token/:companyId", async function (req, res, next) {
     //quotations correspondent aux devis côté client
     //requests correspondent aux devis côté prestataire
@@ -115,9 +115,10 @@ router.get("/find-quotation/:token/:companyId", async function (req, res, next) 
         var quotationsToDisplay = []
         var requestsToDisplay = []
 
+//on construit des objets avec les informations dont on a besoin dans le front et on les rajoute dans un tableau
         for (var i = 0; i < quotations.length; i++) {
             offer = await OfferModel.findById(quotations[i].offerId);
-            console.log("offer", offer)
+            
             provider = await companyModel.findById(quotations[i].providerId)
 
 

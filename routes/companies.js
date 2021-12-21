@@ -14,8 +14,9 @@ var cloudinary = require("cloudinary").v2;
 
 ////// PAGE PROFIL ENTREPRISE //////
 
+//route pour récupérer les informations du profil
 router.get("/profile/:token/:companyId", async function (req, res, next) {
-
+//récupère token et companyId du front, dans l'ordre
   var token = req.params.token
   var companyId = req.params.companyId
 
@@ -26,7 +27,7 @@ router.get("/profile/:token/:companyId", async function (req, res, next) {
 
     var company = await CompanyModel.findById(companyId)
 
-
+//information à renvoyer au front pour qu'elles soient affichées automatiquement dans les input
     var siret = company.siret
     var companyName = company.companyName
     var logo = company.logo
@@ -37,16 +38,20 @@ router.get("/profile/:token/:companyId", async function (req, res, next) {
 
 })
 
+//route pour ajouter un logo 
 router.post("/logo", async function (req, res, next) {
 
   console.log(req.files);
   var imagePath = "./tmp/" + uniqid() + ".jpg";
   var resultCopy = await req.files.logo.mv(imagePath);
+//récupère le fichier photo envoyé du front et le stocke au format jpg
 
   if (!resultCopy) {
+    //upload dans cloudinary
     var resultCloudinary = await cloudinary.uploader.upload(imagePath);
     console.log(resultCloudinary);
     if (resultCloudinary.url) {
+      //si ça a bien été uploadé, suppression du fichier photo
       fs.unlinkSync(imagePath);
       res.json({
         result: true,
@@ -59,10 +64,10 @@ router.post("/logo", async function (req, res, next) {
   }
 
 
-  res.json({ result: true, siret, companyName })
+  res.json({ result: true})
 })
 
-
+//route pour modifier les informations du profil
 router.put("/update-company", async function (req, res, next) {
 
   var token = req.body.token;
@@ -72,6 +77,8 @@ router.put("/update-company", async function (req, res, next) {
   } else {
 
     var newSiret = req.body.siret
+
+    //cherche par id et modifie les informations de la company correspondante dans la collection companies en base de données.
     
     var updateCompany = await CompanyModel.findOneAndUpdate({_id: req.body.companyId }, {
       $set:{
