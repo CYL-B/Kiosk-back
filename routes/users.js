@@ -123,6 +123,7 @@ router.put("/updateuserdata", async function (req, res, next) {
   }
 });
 
+//Route pour récuperer les infos du user à l'ouverture de l'app avec le localstorage.
 router.post("/getUserData", async function (req, res, next) {
   var token = req.body.token;
   console.log("token", token);
