@@ -65,6 +65,7 @@ router.post("/connect", async function (req, res, next) {
   });
 
   if (user) {
+    //permet de comparer le mot de passe entré avec le mot de passe en BDD
     if (bcrypt.compareSync(req.body.password, user.password)) {
       res.json({ result: true, user });
     } else {
@@ -75,7 +76,7 @@ router.post("/connect", async function (req, res, next) {
   }
 });
 
-// route connexion user
+// route permettant d'ajouter un avatar
 router.post("/avatar", async function (req, res, next) {
   console.log(req.files);
   var imagePath = "./tmp/" + uniqid() + ".jpg";
@@ -97,6 +98,9 @@ router.post("/avatar", async function (req, res, next) {
   }
 });
 
+////// PROFIL USER //////
+
+//route permettant de modifier les infos du profil
 router.put("/updateuserdata", async function (req, res, next) {
   var token = req.body.token;
   console.log("token stringigy", token);

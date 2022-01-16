@@ -92,9 +92,8 @@ router.put("/update-company", async function (req, res, next) {
     console.log("update",updateCompany)
 
     if (updateCompany) {
-      var companyData = await CompanyModel.findOne({ id: req.body.companyId });
-      console.log(companyData);
-      res.json({ result: true, companyData });
+     
+      res.json({ result: true, updateCompany });
     } else {
       res.json({ result: false });
     }
@@ -103,7 +102,7 @@ router.put("/update-company", async function (req, res, next) {
 
 ////// PAGE ENTREPRISE //////
 
-// route affichage infos inscription entreprise
+// route affichage de toutes les entreprises (pour générer en random)
 router.get("/all/:token", async function (req, res, next) {
   // /route/params?query
   let token = req.params.token;
@@ -141,7 +140,7 @@ router.get("/:companyId/:token", async function (req, res, next) {
   }
 });
 
-// route envoi infos inscirption entreprise
+// route envoi infos inscription entreprise
 router.post("/", async function (req, res, next) {
   if (!req.body.companyName) {
     res.json({ result: false, message: "company info missing" });
@@ -165,14 +164,6 @@ router.post("/", async function (req, res, next) {
   }
 });
 
-// route affichage labels sur page company blank
-router.get("/labels", async function (req, res, next) {
-  // /route/params?query
-  var dataLabels = await labelModel.find();
-//console.log("dataLabels", dataLabels);
-  res.json({ result: true, dataLabels });
-});
-
 // route rajout infos + labels page entreprise
 router.put("/:companyId", async function (req, res, next) {
 
@@ -185,7 +176,7 @@ router.put("/:companyId", async function (req, res, next) {
     if (req.body.labelId) {
       const labelFound = dataCie.labels.filter(
         (label) => label._id == req.body.labelId
-      ); // on check si le label a deja ete ajouté
+      ); // on check si le label a deja ete ajouté en comparant le label récupéré du front et les labels récupérés en base de données dans le doc company
       labelFound.length === 0 && dataCie.labels.push(req.body.labelId); // si il n'a pas été trouvé, on l'ajoute
     }
 
@@ -208,6 +199,8 @@ router.put("/:companyId", async function (req, res, next) {
       dataCie.companyImage = req.body.image;
     }
 // console.log("dataCie", dataCie)
+
+//les deux populates permettent de trouver les labels et l'ensemble des offres associés à l'entreprise pour les renvoyer au front
     await dataCie.save();
     var dataCieFull = await CompanyModel.findOne({ _id: req.params.companyId })
       .populate("labels")
@@ -228,6 +221,7 @@ router.get("/labels", async function (req, res, next) {
 
 // route suppression labels sur page company filled
 router.put("/labels/:companyId/:labelId", async function (req, res, next) {
+  //on trouve la company et on retire ses labels
   await CompanyModel.updateOne(
     { _id: req.params.companyId },
     { $pull: { labels: req.params.labelId } }
@@ -241,7 +235,7 @@ router.put("/labels/:companyId/:labelId", async function (req, res, next) {
   res.json({ result: true, dataLabelsCieUpdated });
 });
 
-// route to like a company
+// route to like a company et l'ajouter au user
 router.post("/like", async function (req, res, next) {
   let token = req.body.token;
   if (!token) {
@@ -249,8 +243,10 @@ router.post("/like", async function (req, res, next) {
   } else {
     var user = await UserModel.findById(req.body.userId);
     if (req.body.companyId) {
-      if (user.favorites.some(e => e.companyId && e.companyId == req.body.companyId)) {
+      //mécanique de dislike et de like
+      if (user.favorites.some(e => e.companyId && e.companyId == req.body.companyId))/*si l'entreprise est déjà dans les favoris et qu'il y a un click sur le coeur */{
         user.favorites = user.favorites.filter(e => e.offerId || (e.companyId && e.companyId != req.body.companyId));
+        //filtre l'entreprise présente dans les favoris dont l'id correspond à l'id récupéré du front afin de la retirer des favoris
       } else {
         user.favorites.push({ companyId: req.body.companyId });
       }

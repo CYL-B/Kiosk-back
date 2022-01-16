@@ -4,7 +4,7 @@ var router = express.Router();
 var ratingModel = require('../models/ratings');
 
 
-// route get infos companie pour affichage company card :
+// route get pour récupérer les notes d'une entreprise ainsi que les infos des personnes qui ont laissé des notes :
 router.get('/:companyId/:token', async function (req, res, next) { // /route/params?query
     let token = req.params.token;
     if (!token) {
@@ -14,7 +14,7 @@ router.get('/:companyId/:token', async function (req, res, next) { // /route/par
 // console.log("ratings", ratings);
         var avg = await ratingModel.aggregate([{$group: {
             _id : "$providerId",
-            averageNoteByCie: { $avg: "$rating" } // age moyen par ville
+            averageNoteByCie: { $avg: "$rating" } // note moyenne
         }}]);
     res.json({ result: true, ratings, avg });
     }

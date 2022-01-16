@@ -16,13 +16,13 @@ router.get("/getcategories", async function (req, res, next) {
   }
 });
 
-//Route pour trouver une liste d'ID d'offre à partir de la bar de recherche ou des catégories/sous-categories.
+//Route pour trouver une liste d'ID d'offre à partir de la barre de recherche ou des catégories/sous-categories.
 router.post("/rechercheListOffer", async function (req, res, next) {
   var recherche = req.body.recherche;
   var regex = new RegExp("\\b" + recherche, "gi");
   var listOfferID;
 
-  //On recherche d'abord par categories avec en entré non pas la regex mais la recherche entière.
+  //On recherche d'abord par categories avec en entrée non pas la regex mais la recherche entière.
   var rechercheCategorie = await CategoryModel.findOne({
     categoryName: recherche,
   });
@@ -36,7 +36,7 @@ router.post("/rechercheListOffer", async function (req, res, next) {
       { _id: 1 }
     );
 
-    //A partir du résultat des offres trouvé, on garde ici seulement le champs ID pour obtenir une liste d'ID d'offre
+    //A partir du résultat des offres trouvées, on garde ici seulement le champs ID pour obtenir une liste d'ID d'offre
     //qu'on passe au front qui le renverra dans la route suivante /recherche
     listOfferID = listOfferID.map((e) => e._id);
   } else {
@@ -105,7 +105,7 @@ router.post("/recherche", async function (req, res, next) {
   listOfferId = JSON.parse(listOfferId);
   console.log("listOfferId", listOfferId);
 
-  //recherche des offre a partir d'une liste de d'ID
+  //recherche des offre a partir d'une liste de d'ID (permet de mettre plusieurs paramètres de recherche)
   offerList = await OfferModel.find({
     _id: {
       $in: listOfferId,
@@ -130,6 +130,7 @@ router.post("/recherche", async function (req, res, next) {
   }
 });
 
+//route permettant de récupérer l'ensemble des packs
 router.get("/getPacks", async function (req, res, next) {
   var dataPack = await packModel.find();
   if (dataPack) {
@@ -139,6 +140,7 @@ router.get("/getPacks", async function (req, res, next) {
   }
 });
 
+//route permettant de récupérer le pack et les offres correspondanted
 router.get("/getPacks/:packId", async function (req, res, next) {
   var packOffers = await packModel
     .findById(req.params.packId)

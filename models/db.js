@@ -5,7 +5,7 @@ var options = {
     useNewUrlParser: true,
     useUnifiedTopology : true
 }
-mongoose.connect('mongodb+srv://admin:wB4o8utyvAH0uEog@cluster0.by4vv.mongodb.net/kiosk?retryWrites=true&w=majority', 
+mongoose.connect('mongodb+srv://Camdev:E16Rrx0HRym5TVCY@cluster0.d5pln.mongodb.net/Kiosk?retryWrites=true&w=majority', 
     options,         
     function(err) {
        console.log(err);
