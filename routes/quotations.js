@@ -152,14 +152,3 @@ router.get("/find-quotation/:token/:companyId", async function (req, res, next) 
 
 module.exports = router;
 
-//route test update statut
-
-// router.put("/end-quotation", async function(req, res, next){
-
-//     var quotationToEnd = await QuotationModel.updateOne({ id: "61ba08c711286bd01c8f78e0" },
-//         { status: "done" })
-
-//     console.log("quotationToEnd", quotationToEnd)
-
-//     res.json({ result: true, quotationToEnd});
-// })

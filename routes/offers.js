@@ -9,16 +9,16 @@ var UserModel = require("../models/users");
 // route affichage infos offres
 router.get("/:offerId/:token", async function (req, res, next) {
   let token = req.params.token;
-// console.log("route offers");
+
   if (!token) {
     res.json({ result: false });
   } else {
     var offer = await OfferModel.findById(req.params.offerId);
-// console.log("req.params.offerId", req.params.offerId);
+
     var company = await CompanyModel.findOne({
       offers: offer._id,
     });
-// console.log("company", company);
+
     res.json({ result: true, offer, company });
   }
 });
@@ -33,7 +33,7 @@ router.post("/", async function (req, res, next) {
     if (!req.body.offerName) {
       res.json({ result: false, message: "offer info missing" });
     } else {
-// console.log(req.body);
+
       let newOffer = new OfferModel({
         offerName: req.body.offerName,
       });

@@ -82,15 +82,6 @@ router.post("/rechercheListOffer", async function (req, res, next) {
     }
   }
 
-  //recherche dans compagnie. La route fonctionne, veut-on la garder ?
-  // var rechercherCompanies = await companyModel.find({
-  //   $or: [
-  //     { companyName: regex },
-  //     { description: regex },
-  //     { shortDescription: regex },
-  //   ],
-  // });
-  //
 
   if (listOfferID) {
     res.json({ result: true, listOfferID });
@@ -146,7 +137,7 @@ router.get("/getPacks/:packId", async function (req, res, next) {
     .findById(req.params.packId)
     .populate("offers")
     .exec();
-  // console.log("packOffers", packOffers);
+  
   if (packOffers) {
     res.json({ result: true, packOffers });
   } else {
