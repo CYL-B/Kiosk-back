@@ -1,3 +1,4 @@
+import { REACT_APP_DB } from "@env";
 var mongoose = require('mongoose');
 
 var options = {
@@ -5,7 +6,7 @@ var options = {
     useNewUrlParser: true,
     useUnifiedTopology : true
 }
-mongoose.connect('mongodb+srv://Camdev:E16Rrx0HRym5TVCY@cluster0.d5pln.mongodb.net/Kiosk?retryWrites=true&w=majority', 
+mongoose.connect(`mongodb+srv://${REACT_APP_DB}?retryWrites=true&w=majority`, 
     options,         
     function(err) {
        console.log(err);
