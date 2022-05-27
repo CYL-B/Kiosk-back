@@ -11,11 +11,14 @@ The backend of Kiosk is organized in several files which name match their purpos
 * companies : save and retrieve data about the company from the database, host images on cloudinary; 
 
 
-## Technologies
+## Technologies and modules
 
-* **MongoDB** was used to store the data.
-* **Cloudinary** was used to host the app's images. 
+* **MongoDB** was used to store the data;
+* **Cloudinary** was used to host the app's images;
+* **bcrypt** was used to encrypt passwords;
+* **ui2d** was used to create tokens;
 * The backend was published and deployed on **Heroku**. 
+* 
 
 ## More
 
